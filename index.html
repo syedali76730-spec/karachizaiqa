@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Now - Karachi Zaiqa | Authentic Haleem Sydney</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Brand Colors - Dark Theme */
+            --burgundy: #8B1A1A;
+            --burgundy-dark: #5C1111;
+            --burgundy-light: #A52A2A;
+            --forest-green: #2C5F2D;
+            --forest-dark: #1A3A1B;
+            --warm-brown: #654321;
+            --brown-dark: #4A2D18;
+            --mustard: #D4A574;
+            --mustard-dark: #B88A5C;
+            --cream: #F5E6D3;
+            
+            /* Dark Theme Base */
+            --bg-primary: #0D0D0D;
+            --bg-secondary: #1A1A1A;
+            --bg-card: #242424;
+            --bg-elevated: #2E2E2E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B8B8B8;
+            --text-muted: #787878;
+            --border-subtle: #3A3A3A;
+            --border-strong: #4A4A4A;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Animated Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(139, 26, 26, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(44, 95, 45, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(101, 67, 33, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: bgPulse 20s ease-in-out infinite;
+        }
+        
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header with Gradient */
+        .header {
+            background: linear-gradient(rgba(13, 13, 13, 0.70), rgba(26, 26, 26, 0.85)), 
+                        url('haleem-bg.jpg') center/cover no-repeat;
+            background-attachment: fixed; /* Parallax scrolling effect */
+            padding: 2.5rem 1.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Fallback gradient if image doesn't load */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(165deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+            z-index: -1;
+            opacity: 0; /* Only shows if main background fails */
+        }
+        
+        /* Animated glow overlay on top of image */
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, -20px) scale(1.1); }
+        }
+        
+        /* Mobile: Disable parallax, use scroll for better performance */
+        @media (max-width: 768px) {
+            .header {
+                background-attachment: scroll;
+                padding: 2rem 1.5rem 1.5rem;
+            }
+            .header::after {
+                width: 200px;
+                height: 200px;
+            }
+        }
+        
+        .logo {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.75rem;
+            font-weight: 900;
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            position: relative;
+            letter-spacing: -0.5px;
+        }
+        
+        .tagline {
+            color: var(--mustard);
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+        }
+        
+        /* Order Cards */
+        .order-section {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--mustard) 0%, var(--mustard-dark) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        /* Product Cards - Multiple Selection */
+        .products-grid {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--burgundy) 0%, var(--mustard) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card.selected {
+            border-color: var(--burgundy);
+            background: var(--bg-elevated);
+            box-shadow: 0 4px 20px rgba(139, 26, 26, 0.3);
+        }
+        
+        .product-card.selected::before {
+            transform: scaleX(1);
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .product-info h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .product-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .product-price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.75rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--mustard) 0%, var(--mustard-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Quantity Controls */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card.selected .quantity-control {
+            opacity: 1;
+            max-height: 100px;
+        }
+        
+        .qty-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .qty-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: var(--burgundy);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qty-btn:hover {
+            background: var(--burgundy-light);
+            transform: scale(1.1);
+        }
+        
+        .qty-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .qty-display {
+            font-size: 1.25rem;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        
+        /* Add-ons Grid */
+        .addons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.875rem;
+        }
+        
+        .addon-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .addon-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-2px);
+        }
+        
+        .addon-card.selected {
+            border-color: var(--forest-green);
+            background: linear-gradient(135deg, rgba(44, 95, 45, 0.15) 0%, rgba(44, 95, 45, 0.05) 100%);
+        }
+        
+        .addon-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .addon-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        
+        .addon-price {
+            font-weight: 700;
+            color: var(--mustard);
+            font-size: 0.9rem;
+        }
+        
+        .addon-qty {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        .addon-card.selected .addon-qty {
+            display: flex;
+        }
+        
+        .addon-qty-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 6px;
+            background: var(--forest-green);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .addon-qty-btn:hover {
+            background: var(--forest-dark);
+        }
+        
+        .addon-qty-display {
+            font-weight: 700;
+            min-width: 30px;
+            text-align: center;
+            color: var(--text-primary);
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--burgundy);
+            background: var(--bg-elevated);
+            box-shadow: 0 0 0 4px rgba(139, 26, 26, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background: linear-gradient(135deg, var(--warm-brown) 0%, var(--brown-dark) 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 1.5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        
+        .summary-header {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--cream);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--cream);
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: rgba(245, 230, 211, 0.8);
+        }
+        
+        .summary-value {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .summary-total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--mustard);
+        }
+        
+        .summary-total .summary-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cream);
+        }
+        
+        .summary-total .summary-value {
+            font-size: 1.75rem;
+            font-family: 'Crimson Pro', serif;
+            font-weight: 900;
+            color: var(--mustard);
+        }
+        
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--forest-green) 0%, var(--forest-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+            box-shadow: 0 6px 20px rgba(44, 95, 45, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(44, 95, 45, 0.5);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--burgundy);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .info-box strong {
+            color: var(--text-primary);
+        }
+        
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-error {
+            background: rgba(139, 26, 26, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(139, 26, 26, 0.4);
+        }
+        
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(139, 26, 26, 0.2);
+            border-radius: 50%;
+            border-top: 4px solid var(--burgundy);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: var(--bg-secondary);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--forest-green) 0%, var(--forest-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+            animation: scaleIn 0.5s ease;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .success-message h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .success-message p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .order-number-display {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--mustard);
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 2.25rem;
+            }
+            
+            .products-grid,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .addons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Track Order Widget Styles */
+        .track-order-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(139, 26, 26, 0.4);
+            z-index: 9998;
+            transition: all 0.3s ease;
+            animation: trackPulse 2s infinite;
+        }
+         
+        .track-order-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(139, 26, 26, 0.6);
+        }
+         
+        .track-order-fab svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+         
+        @keyframes trackPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(139, 26, 26, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(139, 26, 26, 0.8), 0 0 0 10px rgba(139, 26, 26, 0.1); }
+        }
+         
+        .track-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+         
+        .track-modal-overlay.active {
+            display: flex;
+        }
+         
+        .track-modal {
+            background: #1A1A1A;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+         
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+         
+        .track-modal-header {
+            background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+            padding: 1.5rem;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+         
+        .track-modal-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #F5E6D3;
+            margin: 0;
+        }
+         
+        .close-track-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+         
+        .close-track-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+         
+        .track-modal-body {
+            padding: 2rem;
+        }
+         
+        .track-search-input {
+            width: 100%;
+            padding: 1rem;
+            background: #242424;
+            border: 2px solid #3A3A3A;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+         
+        .track-search-input:focus {
+            outline: none;
+            border-color: #8B1A1A;
+            background: #2E2E2E;
+        }
+         
+        .track-search-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2C5F2D 0%, #1A3A1B 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+         
+        .track-search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 95, 45, 0.4);
+        }
+         
+        .track-order-card {
+            background: #242424;
+            border: 2px solid #3A3A3A;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+         
+        .track-order-number {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #D4A574;
+            margin-bottom: 1rem;
+        }
+         
+        .track-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #3A3A3A;
+        }
+         
+        .track-detail-row:last-child {
+            border-bottom: none;
+        }
+         
+        .track-detail-label {
+            color: #787878;
+            font-size: 0.9rem;
+        }
+         
+        .track-detail-value {
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+         
+        .track-timeline {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #3A3A3A;
+        }
+         
+        .track-timeline-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+         
+        .track-timeline-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            width: 2px;
+            height: 30px;
+            background: #3A3A3A;
+        }
+         
+        .track-timeline-step.active:not(:last-child)::after {
+            background: #D4A574;
+        }
+         
+        .track-timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3A3A3A;
+            color: #787878;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+         
+        .track-timeline-step.active .track-timeline-icon {
+            background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+            color: #D4A574;
+            box-shadow: 0 0 20px rgba(139, 26, 26, 0.5);
+        }
+         
+        .track-timeline-step.completed .track-timeline-icon {
+            background: #2C5F2D;
+            color: white;
+        }
+         
+        .track-timeline-status {
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+         
+        .track-timeline-step.active .track-timeline-status {
+            color: #D4A574;
+        }
+         
+        .track-loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+         
+        .track-loading.active {
+            display: block;
+        }
+         
+        .track-spinner {
+            border: 3px solid #3A3A3A;
+            border-radius: 50%;
+            border-top: 3px solid #8B1A1A;
+            width: 40px;
+            height: 40px;
+            animation: trackSpin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+         
+        @keyframes trackSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="logo">Karachi Zaiqa</h1>
+            <p class="tagline">Sydney's Authentic Haleem</p>
+        </div>
+        
+        <!-- Alert -->
+        <div class="order-section">
+            <div class="alert alert-error" id="errorAlert"></div>
+        </div>
+        
+        <!-- Order Form -->
+        <div id="orderForm">
+            <!-- Products Section -->
+            <div class="order-section">
+                <div class="section-header">
+                    <div class="section-icon">🍲</div>
+                    <h2 class="section-title">Choose Your Haleem</h2>
+                </div>
+                
+                <div class="products-grid">
+                    <div class="product-card" data-product-id="1" data-price="14" onclick="toggleProduct(1)">
+                        <div class="product-header">
+                            <div class="product-info">
+                                <h3>Single Plate</h3>
+                                <p class="product-desc">Perfect for one person</p>
+                            </div>
+                            <div class="product-price">$14</div>
+                        </div>
+                        <div class="quantity-control">
+                            <span class="qty-label">Quantity</span>
+                            <div class="qty-buttons">
+                                <button type="button" class="qty-btn" onclick="event.stopPropagation(); changeQty(1, -1)">−</button>
+                                <span class="qty-display" id="qty-1">1</span>
+                                <button type="button" class="qty-btn" onclick="event.stopPropagation(); changeQty(1, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-card" data-product-id="2" data-price="22" onclick="toggleProduct(2)">
+                        <div class="product-header">
+                            <div class="product-info">
+                                <h3>Double Plate</h3>
+                                <p class="product-desc">Great for sharing or extra hungry!</p>
+                            </div>
+                            <div class="product-price">$22</div>
+                        </div>
+                        <div class="quantity-control">
+                            <span class="qty-label">Quantity</span>
+                            <div class="qty-buttons">
+                                <button type="button" class="qty-btn" onclick="event.stopPropagation(); changeQty(2, -1)">−</button>
+                                <span class="qty-display" id="qty-2">1</span>
+                                <button type="button" class="qty-btn" onclick="event.stopPropagation(); changeQty(2, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add-ons Section -->
+            <div class="order-section">
+                <div class="section-header">
+                    <div class="section-icon">➕</div>
+                    <h2 class="section-title">Add-Ons ($2 each)</h2>
+                </div>
+                
+                <div class="addons-grid">
+                    <div class="addon-card" data-addon-id="1" data-price="2" onclick="toggleAddon(1)">
+                        <div class="addon-header">
+                            <span class="addon-name">Roti</span>
+                            <span class="addon-price">$2</span>
+                        </div>
+                        <div class="addon-qty">
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(1, -1)">−</button>
+                            <span class="addon-qty-display" id="addon-qty-1">1</span>
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(1, 1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="addon-card" data-addon-id="2" data-price="2" onclick="toggleAddon(2)">
+                        <div class="addon-header">
+                            <span class="addon-name">Adrak</span>
+                            <span class="addon-price">$2</span>
+                        </div>
+                        <div class="addon-qty">
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(2, -1)">−</button>
+                            <span class="addon-qty-display" id="addon-qty-2">1</span>
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(2, 1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="addon-card" data-addon-id="3" data-price="2" onclick="toggleAddon(3)">
+                        <div class="addon-header">
+                            <span class="addon-name">Extra Spice</span>
+                            <span class="addon-price">$2</span>
+                        </div>
+                        <div class="addon-qty">
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(3, -1)">−</button>
+                            <span class="addon-qty-display" id="addon-qty-3">1</span>
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(3, 1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="addon-card" data-addon-id="4" data-price="2" onclick="toggleAddon(4)">
+                        <div class="addon-header">
+                            <span class="addon-name">Fried Onions</span>
+                            <span class="addon-price">$2</span>
+                        </div>
+                        <div class="addon-qty">
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(4, -1)">−</button>
+                            <span class="addon-qty-display" id="addon-qty-4">1</span>
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(4, 1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="addon-card" data-addon-id="5" data-price="2" onclick="toggleAddon(5)">
+                        <div class="addon-header">
+                            <span class="addon-name">Beverage</span>
+                            <span class="addon-price">$2</span>
+                        </div>
+                        <div class="addon-qty">
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(5, -1)">−</button>
+                            <span class="addon-qty-display" id="addon-qty-5">1</span>
+                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(5, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Customer Details -->
+            <div class="order-section">
+                <div class="section-header">
+                    <div class="section-icon">👤</div>
+                    <h2 class="section-title">Your Details</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerName">Name *</label>
+                    <input type="text" id="customerName" required placeholder="Enter your name">
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="customerPhone">Phone</label>
+                        <input type="tel" id="customerPhone" placeholder="+61 xxx xxx xxx">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerEmail">Email</label>
+                        <input type="email" id="customerEmail" placeholder="your@email.com">
+                    </div>
+                </div>
+                
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: -0.75rem; margin-bottom: 1.25rem;">
+                    * At least one contact method (phone or email) is required
+                </p>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="pickupDate">Pickup Date *</label>
+                        <input type="date" id="pickupDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pickupTime">Pickup Time *</label>
+                        <input type="time" id="pickupTime" required min="14:00" max="19:30">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialInstructions">Special Instructions (Optional)</label>
+                    <textarea id="specialInstructions" placeholder="Any special requests or dietary requirements..."></textarea>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <div class="summary-header">Order Summary</div>
+                    <div class="summary-row">
+                        <span class="summary-label">Items:</span>
+                        <span class="summary-value" id="summaryItems">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal:</span>
+                        <span class="summary-value" id="summarySubtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span class="summary-label">Total:</span>
+                        <span class="summary-value" id="summaryTotal">$0.00</span>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <strong>💰 Payment:</strong> Cash on Pickup or PayID<br>
+                    <strong>📍 Pickup Only:</strong> No delivery available<br>
+                    <strong>🕒 Hours:</strong> 2:00 PM - 7:30 PM
+                </div>
+                
+                <button type="button" class="submit-btn" onclick="submitOrder()">
+                    Place Order 🛒
+                </button>
+            </div>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p style="color: var(--text-secondary);">Processing your order...</p>
+        </div>
+        
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">✓</div>
+            <h2>Order Confirmed!</h2>
+            <p>Your order has been placed successfully</p>
+            <div class="order-number-display">
+                Order #<span id="orderNumber"></span>
+            </div>
+            <p style="margin-top: 1.5rem; color: var(--text-secondary);">
+                We'll send you a confirmation shortly.<br>
+                See you at pickup!
+            </p>
+            <button class="submit-btn" onclick="location.reload()" style="max-width: 250px; margin: 2rem auto 0;">
+                New Order
+            </button>
+        </div>
+    </div>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // Order State with multiple products and addon quantities
+        let orderState = {
+            products: {}, // { productId: quantity }
+            addons: {},   // { addonId: quantity }
+            total: 0
+        };
+        
+        // Initialize EmailJS
+        emailjs.init('X5d7z34vt6I-VihPm');
+        
+        // Set minimum pickup date
+        document.getElementById('pickupDate').min = new Date().toISOString().split('T')[0];
+        
+        // Toggle Product Selection (Multiple)
+        function toggleProduct(productId) {
+            const card = document.querySelector(`[data-product-id="${productId}"]`);
+            
+            if (orderState.products[productId]) {
+                // Deselect
+                delete orderState.products[productId];
+                card.classList.remove('selected');
+            } else {
+                // Select
+                orderState.products[productId] = 1;
+                card.classList.add('selected');
+                document.getElementById(`qty-${productId}`).textContent = 1;
+            }
+            
+            updateSummary();
+        }
+        
+        // Change Product Quantity
+        function changeQty(productId, delta) {
+            if (!orderState.products[productId]) return;
+            
+            const current = orderState.products[productId];
+            const newQty = Math.max(1, current + delta);
+            orderState.products[productId] = newQty;
+            document.getElementById(`qty-${productId}`).textContent = newQty;
+            updateSummary();
+        }
+        
+        // Toggle Add-on Selection
+        function toggleAddon(addonId) {
+            const card = document.querySelector(`[data-addon-id="${addonId}"]`);
+            
+            if (orderState.addons[addonId]) {
+                // Deselect
+                delete orderState.addons[addonId];
+                card.classList.remove('selected');
+            } else {
+                // Select
+                orderState.addons[addonId] = 1;
+                card.classList.add('selected');
+                document.getElementById(`addon-qty-${addonId}`).textContent = 1;
+            }
+            
+            updateSummary();
+        }
+        
+        // Change Add-on Quantity
+        function changeAddonQty(addonId, delta) {
+            if (!orderState.addons[addonId]) return;
+            
+            const current = orderState.addons[addonId];
+            const newQty = Math.max(1, current + delta);
+            orderState.addons[addonId] = newQty;
+            document.getElementById(`addon-qty-${addonId}`).textContent = newQty;
+            updateSummary();
+        }
+        
+        // Update Order Summary
+        function updateSummary() {
+            let subtotal = 0;
+            let itemsText = [];
+            
+            // Calculate products
+            for (let productId in orderState.products) {
+                const qty = orderState.products[productId];
+                const price = parseFloat(document.querySelector(`[data-product-id="${productId}"]`).dataset.price);
+                const name = productId === "1" ? "Single Plate" : "Double Plate";
+                subtotal += price * qty;
+                itemsText.push(`${qty}x ${name}`);
+            }
+            
+            // Calculate add-ons
+            for (let addonId in orderState.addons) {
+                const qty = orderState.addons[addonId];
+                const price = 2; // All add-ons are $2
+                const names = ['', 'Roti', 'Adrak', 'Extra Spice', 'Fried Onions', 'Beverage'];
+                const name = names[addonId];
+                subtotal += price * qty;
+                itemsText.push(`${qty}x ${name}`);
+            }
+            
+            document.getElementById('summaryItems').textContent = itemsText.length > 0 ? itemsText.join(', ') : '-';
+            document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `$${subtotal.toFixed(2)}`;
+            
+            orderState.total = subtotal;
+        }
+        
+        // Show Alert
+        function showAlert(message) {
+            const alert = document.getElementById('errorAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+            
+            alert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Validate Order
+        function validateOrder() {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            const pickupDate = document.getElementById('pickupDate').value;
+            const pickupTime = document.getElementById('pickupTime').value;
+            
+            if (!name) {
+                showAlert('Please enter your name');
+                return false;
+            }
+            
+            if (!phone && !email) {
+                showAlert('Please provide either phone number or email');
+                return false;
+            }
+            
+            if (Object.keys(orderState.products).length === 0) {
+                showAlert('Please select at least one Haleem plate');
+                return false;
+            }
+            
+            if (!pickupDate) {
+                showAlert('Please select a pickup date');
+                return false;
+            }
+            
+            if (!pickupTime) {
+                showAlert('Please select a pickup time');
+                return false;
+            }
+            
+            // Validate pickup time (2 PM - 7:30 PM)
+            const [hours, minutes] = pickupTime.split(':').map(Number);
+            const timeInMinutes = hours * 60 + minutes;
+            const startTime = 14 * 60;
+            const endTime = 19 * 60 + 30;
+            
+            if (timeInMinutes < startTime || timeInMinutes > endTime) {
+                showAlert('Pickup time must be between 2:00 PM and 7:30 PM');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Submit Order
+        async function submitOrder() {
+            if (!validateOrder()) {
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('orderForm').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+            
+            // Prepare order data
+            const orderData = {
+                customerName: document.getElementById('customerName').value.trim(),
+                customerPhone: document.getElementById('customerPhone').value.trim() || null,
+                customerEmail: document.getElementById('customerEmail').value.trim() || null,
+                pickupDate: document.getElementById('pickupDate').value,
+                pickupTime: document.getElementById('pickupTime').value,
+                specialInstructions: document.getElementById('specialInstructions').value.trim(),
+                products: orderState.products,
+                addons: orderState.addons,
+                total: orderState.total
+            };
+            
+            try {
+                // Submit to backend
+                const response = await fetch('process-order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Send email notifications via EmailJS
+                    await sendEmailNotifications(result.data);
+                    
+                    // Show success message
+                    document.getElementById('loadingState').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('orderNumber').textContent = result.data.orderNumber;
+                } else {
+                    throw new Error(result.message || 'Failed to process order');
+                }
+            } catch (error) {
+                console.error('Order Error:', error);
+                showAlert(error.message || 'Failed to process order. Please try again.');
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('orderForm').style.display = 'block';
+            }
+        }
+        
+        // Send Email Notifications
+        async function sendEmailNotifications(orderData) {
+            // Build order summary text for products
+            let productText = '';
+            for (let pid in orderData.products) {
+                const qty = orderData.products[pid];
+                const name = pid === "1" ? "Single Plate" : "Double Plate";
+                const price = pid === "1" ? "14" : "22";
+                productText += `${qty}x ${name} Haleem (A$${price} each)\n`;
+            }
+            
+            // Build order summary text for add-ons
+            let addonText = 'None';
+            const addonNames = ['', 'Roti', 'Adrak (Ginger)', 'Extra Spice', 'Fried Onions', 'Beverage (Pepsi/7UP)'];
+            if (Object.keys(orderData.addons).length > 0) {
+                addonText = '';
+                for (let aid in orderData.addons) {
+                    const qty = orderData.addons[aid];
+                    addonText += `${qty}x ${addonNames[aid]} (A$2 each)\n`;
+                }
+            }
+            
+            console.log('Sending emails for order:', orderData.orderNumber);
+            console.log('Customer email:', orderData.customerEmail);
+            
+            // Email to owner (always send)
+            try {
+                const ownerResult = await emailjs.send('service_i0c2wnu', 'template_2tqdwrj', {
+                    order_number: orderData.orderNumber,
+                    customer_name: orderData.customerName,
+                    customer_phone: orderData.customerPhone || 'Not provided',
+                    customer_email: orderData.customerEmail || 'Not provided',
+                    product: productText,
+                    addons: addonText,
+                    special_instructions: orderData.specialInstructions || 'None',
+                    total: `A$${orderData.total.toFixed(2)}`,
+                    pickup_date: orderData.pickupDate,
+                    pickup_time: orderData.pickupTime,
+                    email: 'syed.ali.76730@gmail.com'
+                });
+                console.log('Owner email sent successfully:', ownerResult);
+            } catch (error) {
+                console.error('Failed to send owner email:', error);
+            }
+            
+            // Email to customer (only if email provided)
+            if (orderData.customerEmail) {
+                try {
+                    const customerResult = await emailjs.send('service_i0c2wnu', 'template_je5rlah', {
+                        order_number: orderData.orderNumber,
+                        customer_name: orderData.customerName,
+                        product: productText,
+                        addons: addonText,
+                        total: `A$${orderData.total.toFixed(2)}`,
+                        pickup_date: orderData.pickupDate,
+                        pickup_time: orderData.pickupTime,
+                        email: orderData.customerEmail
+                    });
+                    console.log('Customer email sent successfully to:', orderData.customerEmail, customerResult);
+                } catch (error) {
+                    console.error('Failed to send customer email:', error);
+                    console.error('Error details:', error);
+                }
+            } else {
+                console.log('No customer email provided, skipping customer notification');
+            }
+        }
+    </script>
+                <!-- Track Order Widget -->
+        <div class="track-order-fab" onclick="openTrackOrderModal()">
+            <svg viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                <circle cx="12" cy="10" r="1.5"/>
+                <circle cx="8" cy="10" r="1.5"/>
+                <circle cx="16" cy="10" r="1.5"/>
+            </svg>
+        </div>
+         
+        <div class="track-modal-overlay" id="trackOrderModal" onclick="closeTrackOrderModal(event)">
+            <div class="track-modal" onclick="event.stopPropagation()">
+                <div class="track-modal-header">
+                    <h2 class="track-modal-title">Track Your Order</h2>
+                    <button class="close-track-modal" onclick="closeTrackOrderModal()">×</button>
+                </div>
+                
+                <div class="track-modal-body">
+                    <div id="trackSearchSection">
+                        <input type="text" 
+                               class="track-search-input" 
+                               id="trackSearchInput" 
+                               placeholder="Enter order number, phone or email"
+                               onkeypress="if(event.key==='Enter') trackOrderNow()">
+                        <button class="track-search-btn" onclick="trackOrderNow()">🔍 Track Order</button>
+                    </div>
+                    
+                    <div class="track-loading" id="trackLoading">
+                        <div class="track-spinner"></div>
+                        <p style="color: #B8B8B8;">Searching...</p>
+                    </div>
+                    
+                    <div id="trackResults"></div>
+                </div>
+            </div>
+        </div>
+         
+         
+        <!-- ==================== STEP 3: JavaScript ==================== -->
+        <!-- Copy this and paste it BEFORE the closing </body> tag (after the HTML above) -->
+         
+        <script>
+        function openTrackOrderModal() {
+            document.getElementById('trackOrderModal').classList.add('active');
+            document.getElementById('trackSearchInput').focus();
+        }
+         
+        function closeTrackOrderModal(event) {
+            if (!event || event.target.id === 'trackOrderModal') {
+                document.getElementById('trackOrderModal').classList.remove('active');
+                document.getElementById('trackSearchInput').value = '';
+                document.getElementById('trackSearchSection').style.display = 'block';
+                document.getElementById('trackLoading').classList.remove('active');
+                document.getElementById('trackResults').innerHTML = '';
+            }
+        }
+         
+        async function trackOrderNow() {
+            const search = document.getElementById('trackSearchInput').value.trim();
+            if (!search) {
+                alert('Please enter order number, phone, or email');
+                return;
+            }
+            
+            document.getElementById('trackSearchSection').style.display = 'none';
+            document.getElementById('trackLoading').classList.add('active');
+            document.getElementById('trackResults').innerHTML = '';
+            
+            try {
+                const response = await fetch('track-order.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ search })
+                });
+                
+                const result = await response.json();
+                document.getElementById('trackLoading').classList.remove('active');
+                
+                if (result.success && result.data.length > 0) {
+                    displayTrackResults(result.data);
+                } else {
+                    document.getElementById('trackResults').innerHTML = `
+                        <div style="text-align:center;padding:2rem;color:#787878;">
+                            <div style="font-size:3rem;margin-bottom:1rem;">🔍</div>
+                            <h3 style="color:#B8B8B8;">No Orders Found</h3>
+                            <p style="margin-top:1rem;">Please check your order number, phone, or email.</p>
+                            <button class="track-search-btn" onclick="resetTrackSearch()" style="margin-top:1.5rem;max-width:200px;">Try Again</button>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('trackLoading').classList.remove('active');
+                alert('Failed to track order. Please try again.');
+                document.getElementById('trackSearchSection').style.display = 'block';
+            }
+        }
+         
+        function displayTrackResults(orders) {
+            let html = '';
+            orders.forEach(order => {
+                html += `
+                    <div class="track-order-card">
+                        <div class="track-order-number">Order #${order.order_number}</div>
+                        <div class="track-detail-row">
+                            <span class="track-detail-label">Customer</span>
+                            <span class="track-detail-value">${order.customer_name}</span>
+                        </div>
+                        <div class="track-detail-row">
+                            <span class="track-detail-label">Items</span>
+                            <span class="track-detail-value">${order.items_summary}</span>
+                        </div>
+                        <div class="track-detail-row">
+                            <span class="track-detail-label">Pickup</span>
+                            <span class="track-detail-value">${order.pickup_date} ${order.pickup_time}</span>
+                        </div>
+                        <div class="track-detail-row">
+                            <span class="track-detail-label">Total</span>
+                            <span class="track-detail-value">A$${parseFloat(order.total_amount).toFixed(2)}</span>
+                        </div>
+                        <div class="track-timeline">
+                            <div class="track-timeline-step ${order.status === 'received' ? 'active' : 'completed'}">
+                                <div class="track-timeline-icon">📝</div>
+                                <div><div class="track-timeline-status">Order Received</div></div>
+                            </div>
+                            <div class="track-timeline-step ${order.status === 'preparing' ? 'active' : (order.status === 'ready' || order.status === 'picked_up' ? 'completed' : '')}">
+                                <div class="track-timeline-icon">👨‍🍳</div>
+                                <div><div class="track-timeline-status">Being Prepared</div></div>
+                            </div>
+                            <div class="track-timeline-step ${order.status === 'ready' ? 'active' : (order.status === 'picked_up' ? 'completed' : '')}">
+                                <div class="track-timeline-icon">✅</div>
+                                <div><div class="track-timeline-status">Ready for Pickup</div></div>
+                            </div>
+                            <div class="track-timeline-step ${order.status === 'picked_up' ? 'completed' : ''}">
+                                <div class="track-timeline-icon">🎉</div>
+                                <div><div class="track-timeline-status">Picked Up</div></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '<button class="track-search-btn" onclick="resetTrackSearch()" style="margin-top:1.5rem;background:#3A3A3A;">← Search Again</button>';
+            document.getElementById('trackResults').innerHTML = html;
+        }
+         
+        function resetTrackSearch() {
+            document.getElementById('trackSearchSection').style.display = 'block';
+            document.getElementById('trackResults').innerHTML = '';
+            document.getElementById('trackSearchInput').value = '';
+            document.getElementById('trackSearchInput').focus();
+        }
+        </script>
+         
+</body>
+</html>

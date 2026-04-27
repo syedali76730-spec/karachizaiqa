@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - Karachi Zaiqa</title>
+    <style>
+        /* Floating Track Order Button */
+        .track-order-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(139, 26, 26, 0.4);
+            z-index: 9998;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .track-order-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(139, 26, 26, 0.6);
+        }
+        
+        .track-order-fab svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(139, 26, 26, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(139, 26, 26, 0.7); }
+        }
+        
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            background: #D4A574;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #1A1A1A;
+            border: 2px solid #0D0D0D;
+        }
+        
+        /* Modal Overlay */
+        .track-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .track-modal-overlay.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Modal Content */
+        .track-modal {
+            background: #1A1A1A;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Modal Header */
+        .track-modal-header {
+            background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+            padding: 1.5rem;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .track-modal-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #F5E6D3;
+            margin: 0;
+        }
+        
+        .close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        /* Modal Body */
+        .track-modal-body {
+            padding: 2rem;
+        }
+        
+        /* Search Form */
+        .search-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: #B8B8B8;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            background: #242424;
+            border: 2px solid #3A3A3A;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #8B1A1A;
+            background: #2E2E2E;
+        }
+        
+        .search-input::placeholder {
+            color: #787878;
+        }
+        
+        .search-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2C5F2D 0%, #1A3A1B 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 95, 45, 0.4);
+        }
+        
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Results Section */
+        .results-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        /* Order Card */
+        .order-result-card {
+            background: #242424;
+            border: 2px solid #3A3A3A;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .order-number {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #D4A574;
+            margin-bottom: 1rem;
+        }
+        
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #3A3A3A;
+        }
+        
+        .order-detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .order-detail-label {
+            color: #787878;
+            font-size: 0.9rem;
+        }
+        
+        .order-detail-value {
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+        
+        /* Status Timeline */
+        .status-timeline {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #3A3A3A;
+        }
+        
+        .timeline-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #B8B8B8;
+            margin-bottom: 1rem;
+        }
+        
+        .timeline-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .timeline-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            width: 2px;
+            height: 30px;
+            background: #3A3A3A;
+        }
+        
+        .timeline-step.active:not(:last-child)::after {
+            background: #D4A574;
+        }
+        
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3A3A3A;
+            color: #787878;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        
+        .timeline-step.active .timeline-icon {
+            background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
+            color: #D4A574;
+            box-shadow: 0 0 20px rgba(139, 26, 26, 0.5);
+        }
+        
+        .timeline-step.completed .timeline-icon {
+            background: #2C5F2D;
+            color: white;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-status {
+            font-weight: 700;
+            color: #FFFFFF;
+            text-transform: capitalize;
+        }
+        
+        .timeline-step.active .timeline-status {
+            color: #D4A574;
+        }
+        
+        .timeline-time {
+            font-size: 0.85rem;
+            color: #787878;
+            margin-top: 0.25rem;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #787878;
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 3px solid #3A3A3A;
+            border-radius: 50%;
+            border-top: 3px solid #8B1A1A;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: rgba(44, 95, 45, 0.1);
+            border-left: 3px solid #2C5F2D;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #B8B8B8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .track-modal {
+                max-width: 100%;
+                margin: 0;
+                border-radius: 20px 20px 0 0;
+                max-height: 95vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Track Order Button -->
+    <div class="track-order-fab" onclick="openTrackModal()">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+            <circle cx="12" cy="10" r="1.5"/>
+            <circle cx="8" cy="10" r="1.5"/>
+            <circle cx="16" cy="10" r="1.5"/>
+        </svg>
+        <span class="notification-badge" id="orderBadge" style="display: none;">!</span>
+    </div>
+    
+    <!-- Track Order Modal -->
+    <div class="track-modal-overlay" id="trackModal" onclick="closeTrackModal(event)">
+        <div class="track-modal" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="track-modal-header">
+                <h2 class="track-modal-title">Track Your Order</h2>
+                <button class="close-modal" onclick="closeTrackModal()">×</button>
+            </div>
+            
+            <!-- Body -->
+            <div class="track-modal-body">
+                <!-- Search Form -->
+                <div class="search-section" id="searchSection">
+                    <label class="search-label">Enter Order Number, Phone or Email</label>
+                    <input type="text" 
+                           class="search-input" 
+                           id="searchInput" 
+                           placeholder="e.g., KZ20260424001 or +61 xxx xxx xxx"
+                           onkeypress="if(event.key==='Enter') trackOrder()">
+                    <button class="search-btn" onclick="trackOrder()">
+                        🔍 Track Order
+                    </button>
+                    
+                    <div class="info-box">
+                        💡 <strong>Tip:</strong> You can search using your order number, phone number, or email address.
+                    </div>
+                </div>
+                
+                <!-- Loading -->
+                <div class="loading" id="loadingState">
+                    <div class="spinner"></div>
+                    <p style="color: #B8B8B8;">Searching for your order...</p>
+                </div>
+                
+                <!-- Results -->
+                <div class="results-section" id="resultsSection">
+                    <!-- Results will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Open Modal
+        function openTrackModal() {
+            document.getElementById('trackModal').classList.add('active');
+            document.getElementById('searchInput').focus();
+        }
+        
+        // Close Modal
+        function closeTrackModal(event) {
+            if (!event || event.target.classList.contains('track-modal-overlay') || !event) {
+                document.getElementById('trackModal').classList.remove('active');
+                resetModal();
+            }
+        }
+        
+        // Reset Modal
+        function resetModal() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchSection').style.display = 'block';
+            document.getElementById('loadingState').classList.remove('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            document.getElementById('resultsSection').innerHTML = '';
+        }
+        
+        // Track Order
+        async function trackOrder() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            
+            if (!searchTerm) {
+                alert('Please enter order number, phone, or email');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('searchSection').style.display = 'none';
+            document.getElementById('loadingState').classList.add('active');
+            document.getElementById('resultsSection').classList.remove('active');
+            
+            try {
+                const response = await fetch('track-order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        search: searchTerm
+                    })
+                });
+                
+                const result = await response.json();
+                
+                // Hide loading
+                document.getElementById('loadingState').classList.remove('active');
+                
+                if (result.success && result.data.length > 0) {
+                    displayResults(result.data);
+                } else {
+                    displayEmptyState();
+                }
+            } catch (error) {
+                console.error('Track order error:', error);
+                document.getElementById('loadingState').classList.remove('active');
+                alert('Failed to track order. Please try again.');
+                document.getElementById('searchSection').style.display = 'block';
+            }
+        }
+        
+        // Display Results
+        function displayResults(orders) {
+            const resultsContainer = document.getElementById('resultsSection');
+            resultsContainer.innerHTML = '';
+            
+            orders.forEach(order => {
+                const card = createOrderCard(order);
+                resultsContainer.appendChild(card);
+            });
+            
+            resultsContainer.classList.add('active');
+            
+            // Add back button
+            const backBtn = document.createElement('button');
+            backBtn.className = 'search-btn';
+            backBtn.style.background = '#3A3A3A';
+            backBtn.textContent = '← Search Again';
+            backBtn.onclick = () => {
+                document.getElementById('searchSection').style.display = 'block';
+                document.getElementById('resultsSection').classList.remove('active');
+            };
+            resultsContainer.appendChild(backBtn);
+        }
+        
+        // Create Order Card
+        function createOrderCard(order) {
+            const card = document.createElement('div');
+            card.className = 'order-result-card';
+            
+            const statusLabels = {
+                'received': 'Order Received',
+                'preparing': 'Being Prepared',
+                'ready': 'Ready for Pickup',
+                'picked_up': 'Picked Up'
+            };
+            
+            const statusIcons = {
+                'received': '📝',
+                'preparing': '👨‍🍳',
+                'ready': '✅',
+                'picked_up': '🎉'
+            };
+            
+            card.innerHTML = `
+                <div class="order-number">Order #${order.order_number}</div>
+                
+                <div class="order-detail-row">
+                    <span class="order-detail-label">Customer</span>
+                    <span class="order-detail-value">${order.customer_name}</span>
+                </div>
+                
+                <div class="order-detail-row">
+                    <span class="order-detail-label">Items</span>
+                    <span class="order-detail-value">${order.items_summary}</span>
+                </div>
+                
+                <div class="order-detail-row">
+                    <span class="order-detail-label">Pickup Date</span>
+                    <span class="order-detail-value">${order.pickup_date}</span>
+                </div>
+                
+                <div class="order-detail-row">
+                    <span class="order-detail-label">Pickup Time</span>
+                    <span class="order-detail-value">${order.pickup_time}</span>
+                </div>
+                
+                <div class="order-detail-row">
+                    <span class="order-detail-label">Total</span>
+                    <span class="order-detail-value">A$${parseFloat(order.total_amount).toFixed(2)}</span>
+                </div>
+                
+                <div class="status-timeline">
+                    <div class="timeline-title">Order Status Timeline</div>
+                    
+                    <div class="timeline-step ${order.status === 'received' ? 'active' : 'completed'}">
+                        <div class="timeline-icon">📝</div>
+                        <div class="timeline-content">
+                            <div class="timeline-status">Order Received</div>
+                            <div class="timeline-time">${order.created_at}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step ${order.status === 'preparing' ? 'active' : order.status === 'ready' || order.status === 'picked_up' ? 'completed' : ''}">
+                        <div class="timeline-icon">👨‍🍳</div>
+                        <div class="timeline-content">
+                            <div class="timeline-status">Being Prepared</div>
+                            ${order.status === 'preparing' ? '<div class="timeline-time">In progress...</div>' : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step ${order.status === 'ready' ? 'active' : order.status === 'picked_up' ? 'completed' : ''}">
+                        <div class="timeline-icon">✅</div>
+                        <div class="timeline-content">
+                            <div class="timeline-status">Ready for Pickup</div>
+                            ${order.status === 'ready' ? '<div class="timeline-time">Ready now!</div>' : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step ${order.status === 'picked_up' ? 'completed' : ''}">
+                        <div class="timeline-icon">🎉</div>
+                        <div class="timeline-content">
+                            <div class="timeline-status">Picked Up</div>
+                            ${order.status === 'picked_up' ? '<div class="timeline-time">Completed</div>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Display Empty State
+        function displayEmptyState() {
+            const resultsContainer = document.getElementById('resultsSection');
+            resultsContainer.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <h3 style="color: #B8B8B8; margin-bottom: 0.5rem;">No Orders Found</h3>
+                    <p>We couldn't find any orders matching your search.</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Please check your order number, phone, or email and try again.</p>
+                </div>
+            `;
+            
+            resultsContainer.classList.add('active');
+            
+            // Add back button
+            const backBtn = document.createElement('button');
+            backBtn.className = 'search-btn';
+            backBtn.style.background = '#3A3A3A';
+            backBtn.textContent = '← Try Again';
+            backBtn.onclick = () => {
+                document.getElementById('searchSection').style.display = 'block';
+                document.getElementById('resultsSection').classList.remove('active');
+            };
+            resultsContainer.appendChild(backBtn);
+        }
+    </script>
+</body>
+</html>
