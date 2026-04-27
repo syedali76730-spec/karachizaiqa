@@ -971,14 +971,32 @@
 
         /* Quantity remaining display */
         .quantity-remaining {
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             color: var(--mustard);
-            margin-top: 0.35rem;
-            font-weight: 500;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-remaining::before {
+            content: '📦';
+            font-size: 1rem;
         }
 
         .quantity-remaining.low {
             color: #ff6b6b;
+            animation: urgentPulse 2s infinite;
+        }
+
+        .quantity-remaining.low::before {
+            content: '⚠️';
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         /* Sold out badge */
@@ -1027,6 +1045,7 @@
                             <div class="product-info">
                                 <h3>Regular Plate</h3>
                                 <p class="product-desc">Perfect for one person</p>
+                                <p class="quantity-remaining" id="qty-remaining-1">Loading...</p>
                             </div>
                             <div class="product-price">$14</div>
                         </div>
@@ -1045,6 +1064,7 @@
                             <div class="product-info">
                                 <h3>Large Plate</h3>
                                 <p class="product-desc">Great for sharing or extra hungry!</p>
+                                <p class="quantity-remaining" id="qty-remaining-2">Loading...</p>
                             </div>
                             <div class="product-price">$22</div>
                         </div>
@@ -1562,32 +1582,27 @@
                     card.dataset.price = product.price;
                 }
 
-                // Clear previous dynamic elements
-                const existingQtyDisplay = card.querySelector('.quantity-remaining');
-                if (existingQtyDisplay) existingQtyDisplay.remove();
+                // Clear previous dynamic sold-out badge
                 const existingBadge = card.querySelector('.sold-out-badge');
                 if (existingBadge) existingBadge.remove();
 
                 const productInfo = card.querySelector('.product-info');
                 const isSoldOut = !product.available || product.quantity === 0;
+                const qtyDisplay = document.getElementById(`qty-remaining-${product.id}`);
 
                 if (isSoldOut) {
                     card.classList.add('sold-out');
                     card.classList.remove('selected');
                     delete orderState.products[product.id];
-                    if (productInfo) {
-                        const badge = document.createElement('span');
-                        badge.className = 'sold-out-badge';
-                        badge.textContent = 'Sold Out';
-                        productInfo.appendChild(badge);
+                    if (qtyDisplay) {
+                        qtyDisplay.textContent = 'SOLD OUT';
+                        qtyDisplay.className = 'quantity-remaining low';
                     }
                 } else {
                     card.classList.remove('sold-out');
-                    if (product.quantity !== null && product.quantity !== undefined) {
-                        const qtyEl = document.createElement('p');
-                        qtyEl.className = 'quantity-remaining' + (product.quantity <= 5 ? ' low' : '');
-                        qtyEl.textContent = `${product.quantity} plates remaining`;
-                        if (productInfo) productInfo.appendChild(qtyEl);
+                    if (qtyDisplay && product.quantity !== null && product.quantity !== undefined) {
+                        qtyDisplay.textContent = `${product.quantity} plates remaining`;
+                        qtyDisplay.className = 'quantity-remaining' + (product.quantity <= 5 ? ' low' : '');
                     }
                 }
             });
