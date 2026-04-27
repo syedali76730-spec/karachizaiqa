@@ -1521,12 +1521,28 @@
             console.log('[Menu] Loading menu data from get-menu-data.php');
             try {
                 const response = await fetch('get-menu-data.php');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
+                console.log('[Menu] Response status:', response.status);
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error('[Menu] Response error:', text);
+                    throw new Error('HTTP ' + response.status);
+                }
+
                 const result = await response.json();
                 console.log('[Menu] Menu data received:', result);
 
-                if (result.products) updateProductDisplay(result.products);
-                if (result.addons) updateAddonDisplay(result.addons);
+                if (result.success && result.data) {
+                    console.log('[Menu] Products:', result.data.products);
+                    console.log('[Menu] Addons:', result.data.addons);
+
+                    if (result.data.products) updateProductDisplay(result.data.products);
+                    if (result.data.addons) updateAddonDisplay(result.data.addons);
+                } else {
+                    console.error('[Menu] Invalid result format:', result);
+                }
+
+                window.menuDataLoaded = true;
             } catch (error) {
                 console.error('[Menu] Failed to load menu data:', error);
             }
@@ -1606,6 +1622,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadMenuData();
         });
+
+        // Fallback if DOMContentLoaded already fired
+        setTimeout(function() {
+            if (!window.menuDataLoaded) {
+                console.log('[Menu] Fallback: Loading menu data');
+                loadMenuData();
+            }
+        }, 1000);
     </script>
                 <!-- Track Order Widget -->
         <div class="track-order-fab" onclick="openTrackOrderModal()">
