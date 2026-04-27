@@ -1007,19 +1007,34 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
 
         // Toggle addon ON/OFF (FIX 3)
         async function toggleAddon(addonId, isActive) {
-            console.log('[Admin] Toggling addon:', addonId, 'active:', isActive);
+            console.log('[Admin] Toggling addon:', addonId, 'isActive:', isActive);
             const checkbox = document.getElementById(`addon-toggle-${addonId}`);
             const labelEl = document.getElementById(`addon-toggle-label-${addonId}`);
+
             try {
+                const payload = {
+                    action: 'toggleAddon',
+                    addonId: parseInt(addonId),
+                    isActive: isActive ? 1 : 0  // Changed from 'active' to 'isActive'
+                };
+
+                console.log('[Admin] Sending payload:', payload);
+
                 const response = await fetch('admin-api.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'toggleAddon', addonId: addonId, active: isActive ? 1 : 0 })
+                    body: JSON.stringify(payload)
                 });
+
                 const result = await response.json();
                 console.log('[Admin] Toggle result:', result);
+
                 if (result.success) {
-                    if (labelEl) labelEl.textContent = isActive ? 'ON' : 'OFF';
+                    if (labelEl) {
+                        labelEl.textContent = isActive ? 'ON' : 'OFF';
+                        labelEl.style.color = isActive ? '#2C5F2D' : '#8B1A1A';
+                    }
+                    alert('Addon ' + (isActive ? 'enabled' : 'disabled') + ' successfully!');
                 } else {
                     alert('Failed to toggle addon: ' + (result.message || 'Unknown error'));
                     if (checkbox) checkbox.checked = !isActive;
@@ -1027,7 +1042,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                 }
             } catch (error) {
                 console.error('[Admin] Toggle addon error:', error);
-                alert('Failed to toggle addon');
+                alert('Failed to toggle addon: ' + error.message);
                 if (checkbox) checkbox.checked = !isActive;
                 if (labelEl) labelEl.textContent = isActive ? 'OFF' : 'ON';
             }
