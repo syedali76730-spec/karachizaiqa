@@ -42,6 +42,14 @@ switch ($action) {
         updatePricing();
         break;
     
+    case 'updateInventory':
+        updateInventory();
+        break;
+    
+    case 'toggleAddon':
+        toggleAddon();
+        break;
+    
     case 'cashflow':
         getCashFlow();
         break;
@@ -275,10 +283,10 @@ function getPricing() {
     try {
         $conn = getDBConnection();
         
-        $stmt = $conn->query("SELECT id, name, price FROM products WHERE is_active = 1 ORDER BY id");
+        $stmt = $conn->query("SELECT id, name, price, quantity FROM products WHERE is_active = 1 ORDER BY id");
         $products = $stmt->fetchAll();
         
-        $stmt = $conn->query("SELECT id, name, price FROM addons WHERE is_active = 1 ORDER BY id");
+        $stmt = $conn->query("SELECT id, name, price, is_active FROM addons ORDER BY id");
         $addons = $stmt->fetchAll();
         
         jsonResponse(true, '', [
@@ -448,6 +456,58 @@ function exportOrders() {
     } catch (Exception $e) {
         error_log("Export Error: " . $e->getMessage());
         die('Export failed');
+    }
+}
+
+// Update Inventory Quantity (Fix #4)
+function updateInventory() {
+    try {
+        $input = file_get_contents('php://input');
+        $data = json_decode($input, true);
+        
+        $productId = $data['productId'] ?? $_POST['productId'] ?? 0;
+        $quantity = $data['quantity'] ?? $_POST['quantity'] ?? 0;
+        
+        if (!$productId || $quantity < 0) {
+            jsonResponse(false, 'Product ID and valid quantity required');
+        }
+        
+        $conn = getDBConnection();
+        
+        $stmt = $conn->prepare("UPDATE products SET quantity = ? WHERE id = ?");
+        $stmt->execute([$quantity, $productId]);
+        
+        jsonResponse(true, 'Inventory updated successfully');
+        
+    } catch (Exception $e) {
+        error_log("Update Inventory Error: " . $e->getMessage());
+        jsonResponse(false, 'Failed to update inventory');
+    }
+}
+
+// Toggle Addon Status (Fix #3)
+function toggleAddon() {
+    try {
+        $input = file_get_contents('php://input');
+        $data = json_decode($input, true);
+        
+        $addonId = $data['addonId'] ?? $_POST['addonId'] ?? 0;
+        $isActive = isset($data['isActive']) ? $data['isActive'] : (isset($_POST['isActive']) ? $_POST['isActive'] : null);
+        
+        if (!$addonId || $isActive === null) {
+            jsonResponse(false, 'Addon ID and active status required');
+        }
+        
+        $conn = getDBConnection();
+        
+        $stmt = $conn->prepare("UPDATE addons SET is_active = ? WHERE id = ?");
+        $stmt->execute([boolval($isActive), $addonId]);
+        
+        jsonResponse(true, 'Addon status updated successfully');
+        
+    } catch (Exception $e) {
+        error_log("Toggle Addon Error: " . $e->getMessage());
+        jsonResponse(false, 'Failed to update addon status');
     }
 }
 ?>

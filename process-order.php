@@ -161,6 +161,17 @@ try {
             $product['quantity'],
             $product['price']
         ]);
+        
+        // Decrement inventory (Fix #4)
+        $updateStmt = $conn->prepare("UPDATE products SET quantity = quantity - ? WHERE id = ? AND quantity >= ?");
+        $updateStmt->execute([$product['quantity'], $product['id'], $product['quantity']]);
+        
+        // Check if inventory update was successful
+        if ($updateStmt->rowCount() === 0) {
+            $conn->rollBack();
+            jsonResponse(false, 'Insufficient quantity for ' . $product['name']);
+            exit;
+        }
     }
     
     // Insert add-ons with quantities
