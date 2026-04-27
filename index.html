@@ -947,6 +947,55 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Sold out product */
+        .product-card.sold-out {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        .product-card.sold-out .product-price {
+            -webkit-text-fill-color: var(--text-muted);
+            background: none;
+            color: var(--text-muted);
+        }
+
+        /* Disabled addon (inactive) */
+        .addon-card.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        /* Quantity remaining display */
+        .quantity-remaining {
+            font-size: 0.8rem;
+            color: var(--mustard);
+            margin-top: 0.35rem;
+            font-weight: 500;
+        }
+
+        .quantity-remaining.low {
+            color: #ff6b6b;
+        }
+
+        /* Sold out badge */
+        .sold-out-badge {
+            display: inline-block;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.4);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.35rem;
+            display: block;
+        }
     </style>
 </head>
 
@@ -976,7 +1025,7 @@
                     <div class="product-card" data-product-id="1" data-price="14" onclick="toggleProduct(1)">
                         <div class="product-header">
                             <div class="product-info">
-                                <h3>Single Plate</h3>
+                                <h3>Regular Plate</h3>
                                 <p class="product-desc">Perfect for one person</p>
                             </div>
                             <div class="product-price">$14</div>
@@ -994,7 +1043,7 @@
                     <div class="product-card" data-product-id="2" data-price="22" onclick="toggleProduct(2)">
                         <div class="product-header">
                             <div class="product-info">
-                                <h3>Double Plate</h3>
+                                <h3>Large Plate</h3>
                                 <p class="product-desc">Great for sharing or extra hungry!</p>
                             </div>
                             <div class="product-price">$22</div>
@@ -1263,7 +1312,7 @@
             for (let productId in orderState.products) {
                 const qty = orderState.products[productId];
                 const price = parseFloat(document.querySelector(`[data-product-id="${productId}"]`).dataset.price);
-                const name = productId === "1" ? "Single Plate" : "Double Plate";
+                const name = productId === "1" ? "Regular Plate" : "Large Plate";
                 subtotal += price * qty;
                 itemsText.push(`${qty}x ${name}`);
             }
@@ -1405,7 +1454,7 @@
             let productText = '';
             for (let pid in orderData.products) {
                 const qty = orderData.products[pid];
-                const name = pid === "1" ? "Single Plate" : "Double Plate";
+                const name = pid === "1" ? "Regular Plate" : "Large Plate";
                 const price = pid === "1" ? "14" : "22";
                 productText += `${qty}x ${name} Haleem (A$${price} each)\n`;
             }
@@ -1466,6 +1515,97 @@
                 console.log('No customer email provided, skipping customer notification');
             }
         }
+
+        // Load menu data from API (FIX 2 & 4)
+        async function loadMenuData() {
+            console.log('[Menu] Loading menu data from get-menu-data.php');
+            try {
+                const response = await fetch('get-menu-data.php');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const result = await response.json();
+                console.log('[Menu] Menu data received:', result);
+
+                if (result.products) updateProductDisplay(result.products);
+                if (result.addons) updateAddonDisplay(result.addons);
+            } catch (error) {
+                console.error('[Menu] Failed to load menu data:', error);
+            }
+        }
+
+        // Update product cards with live prices, quantities, sold-out state
+        function updateProductDisplay(products) {
+            console.log('[Menu] Updating product display:', products);
+            products.forEach(product => {
+                const card = document.querySelector(`[data-product-id="${product.id}"]`);
+                if (!card) return;
+
+                // Update price
+                const priceEl = card.querySelector('.product-price');
+                if (priceEl) {
+                    priceEl.textContent = `$${parseFloat(product.price).toFixed(0)}`;
+                    card.dataset.price = product.price;
+                }
+
+                // Clear previous dynamic elements
+                const existingQtyDisplay = card.querySelector('.quantity-remaining');
+                if (existingQtyDisplay) existingQtyDisplay.remove();
+                const existingBadge = card.querySelector('.sold-out-badge');
+                if (existingBadge) existingBadge.remove();
+
+                const productInfo = card.querySelector('.product-info');
+                const isSoldOut = !product.available || product.quantity === 0;
+
+                if (isSoldOut) {
+                    card.classList.add('sold-out');
+                    card.classList.remove('selected');
+                    delete orderState.products[product.id];
+                    if (productInfo) {
+                        const badge = document.createElement('span');
+                        badge.className = 'sold-out-badge';
+                        badge.textContent = 'Sold Out';
+                        productInfo.appendChild(badge);
+                    }
+                } else {
+                    card.classList.remove('sold-out');
+                    if (product.quantity !== null && product.quantity !== undefined) {
+                        const qtyEl = document.createElement('p');
+                        qtyEl.className = 'quantity-remaining' + (product.quantity <= 5 ? ' low' : '');
+                        qtyEl.textContent = `${product.quantity} plates remaining`;
+                        if (productInfo) productInfo.appendChild(qtyEl);
+                    }
+                }
+            });
+            updateSummary();
+        }
+
+        // Gray out inactive addons
+        function updateAddonDisplay(addons) {
+            console.log('[Menu] Updating addon display:', addons);
+            addons.forEach(addon => {
+                const card = document.querySelector(`[data-addon-id="${addon.id}"]`);
+                if (!card) return;
+
+                // Update price
+                const priceEl = card.querySelector('.addon-price');
+                if (priceEl) {
+                    priceEl.textContent = `$${parseFloat(addon.price).toFixed(0)}`;
+                    card.dataset.price = addon.price;
+                }
+
+                if (!addon.active) {
+                    card.classList.add('disabled');
+                    card.classList.remove('selected');
+                    delete orderState.addons[addon.id];
+                } else {
+                    card.classList.remove('disabled');
+                }
+            });
+            updateSummary();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMenuData();
+        });
     </script>
                 <!-- Track Order Widget -->
         <div class="track-order-fab" onclick="openTrackOrderModal()">

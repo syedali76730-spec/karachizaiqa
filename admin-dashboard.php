@@ -380,6 +380,106 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             color: #999;
         }
         
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--forest-green);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(24px);
+        }
+
+        .toggle-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+        }
+
+        /* Inventory Section */
+        .inventory-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .inventory-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .inventory-item-name {
+            flex: 1;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .inventory-current {
+            font-size: 0.875rem;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .qty-input {
+            width: 80px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            font-size: 1rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header {
@@ -511,12 +611,20 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                 <div class="form-grid" id="productsGrid">
                     <!-- Loaded via JS -->
                 </div>
-                
+
+                <div class="inventory-section">
+                    <h3 style="margin-bottom: 0.5rem; color: var(--warm-brown);">📦 Inventory Management</h3>
+                    <p style="color: #666; font-size: 0.875rem; margin-bottom: 1rem;">Set available quantity per product. Customers cannot order when quantity reaches 0.</p>
+                    <div id="inventoryGrid">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+
                 <h3 style="margin: 2rem 0 1rem; color: var(--warm-brown);">Add-ons</h3>
                 <div class="form-grid" id="addonsGrid">
                     <!-- Loaded via JS -->
                 </div>
-                
+
                 <button class="btn btn-success" onclick="savePricing()" style="margin-top: 2rem;">💾 Save All Prices</button>
             </div>
         </div>
@@ -806,41 +914,152 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             document.getElementById('orderModal').classList.remove('active');
         }
         
-        // Load Pricing
+        // Load Pricing (FIX 3 & 4)
         async function loadPricing() {
             try {
                 const response = await fetch('admin-api.php?action=pricing');
                 const result = await response.json();
-                
+
                 if (result.success) {
-                    renderPricingForm(result.data.products, 'productsGrid');
-                    renderPricingForm(result.data.addons, 'addonsGrid');
+                    renderProductPricing(result.data.products, 'productsGrid');
+                    renderInventory(result.data.products, 'inventoryGrid');
+                    renderAddonPricing(result.data.addons, 'addonsGrid');
                 }
             } catch (error) {
                 console.error('Failed to load pricing:', error);
             }
         }
-        
-        // Render Pricing Form
-        function renderPricingForm(items, containerId) {
+
+        // Render product price inputs
+        function renderProductPricing(items, containerId) {
             const container = document.getElementById(containerId);
             let html = '';
-            
             items.forEach(item => {
                 html += `
                     <div class="form-group">
                         <label>${item.name}</label>
-                        <input type="number" 
-                               step="0.01" 
-                               value="${item.price}" 
+                        <input type="number"
+                               step="0.01"
+                               value="${item.price}"
                                data-id="${item.id}"
-                               data-type="${containerId === 'productsGrid' ? 'product' : 'addon'}"
+                               data-type="product"
                                class="price-input">
                     </div>
                 `;
             });
-            
             container.innerHTML = html;
+        }
+
+        // Render addon price inputs with ON/OFF toggle (FIX 3)
+        function renderAddonPricing(items, containerId) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            items.forEach(item => {
+                const isActive = item.is_active == 1 || item.active == 1 || item.is_active === true || item.active === true;
+                html += `
+                    <div class="form-group">
+                        <label>${item.name}</label>
+                        <input type="number"
+                               step="0.01"
+                               value="${item.price}"
+                               data-id="${item.id}"
+                               data-type="addon"
+                               class="price-input">
+                        <div class="toggle-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox"
+                                       id="addon-toggle-${item.id}"
+                                       ${isActive ? 'checked' : ''}
+                                       onchange="toggleAddon(${item.id}, this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label" id="addon-toggle-label-${item.id}">${isActive ? 'ON' : 'OFF'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Render inventory quantity inputs (FIX 4)
+        function renderInventory(products, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            let html = '';
+            products.forEach(product => {
+                const qty = product.quantity !== undefined && product.quantity !== null ? product.quantity : 0;
+                html += `
+                    <div class="inventory-item">
+                        <span class="inventory-item-name">${product.name}</span>
+                        <span class="inventory-current">Current: ${qty}</span>
+                        <input type="number"
+                               class="qty-input"
+                               id="inventory-${product.id}"
+                               value="${qty}"
+                               min="0"
+                               placeholder="Qty">
+                        <button class="btn btn-sm btn-primary" onclick="updateInventory(${product.id})">Update</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html || '<p style="color:#999;">No products found</p>';
+        }
+
+        // Toggle addon ON/OFF (FIX 3)
+        async function toggleAddon(addonId, isActive) {
+            console.log('[Admin] Toggling addon:', addonId, 'active:', isActive);
+            const checkbox = document.getElementById(`addon-toggle-${addonId}`);
+            const labelEl = document.getElementById(`addon-toggle-label-${addonId}`);
+            try {
+                const response = await fetch('admin-api.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'toggleAddon', addonId: addonId, active: isActive ? 1 : 0 })
+                });
+                const result = await response.json();
+                console.log('[Admin] Toggle result:', result);
+                if (result.success) {
+                    if (labelEl) labelEl.textContent = isActive ? 'ON' : 'OFF';
+                } else {
+                    alert('Failed to toggle addon: ' + (result.message || 'Unknown error'));
+                    if (checkbox) checkbox.checked = !isActive;
+                    if (labelEl) labelEl.textContent = isActive ? 'OFF' : 'ON';
+                }
+            } catch (error) {
+                console.error('[Admin] Toggle addon error:', error);
+                alert('Failed to toggle addon');
+                if (checkbox) checkbox.checked = !isActive;
+                if (labelEl) labelEl.textContent = isActive ? 'OFF' : 'ON';
+            }
+        }
+
+        // Update product inventory quantity (FIX 4)
+        async function updateInventory(productId) {
+            const input = document.getElementById(`inventory-${productId}`);
+            const quantity = parseInt(input.value);
+            if (isNaN(quantity) || quantity < 0) {
+                alert('Please enter a valid quantity (0 or more)');
+                return;
+            }
+            console.log('[Admin] Updating inventory for product:', productId, 'qty:', quantity);
+            try {
+                const response = await fetch('admin-api.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'updateInventory', productId: productId, quantity: quantity })
+                });
+                const result = await response.json();
+                console.log('[Admin] Inventory update result:', result);
+                if (result.success) {
+                    alert('Inventory updated successfully!');
+                    loadPricing();
+                } else {
+                    alert('Failed to update inventory: ' + (result.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('[Admin] Update inventory error:', error);
+                alert('Failed to update inventory');
+            }
         }
         
         // Save Pricing
