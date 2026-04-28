@@ -1172,7 +1172,7 @@
                     
                     <div class="form-group">
                         <label for="pickupTime">Pickup Time *</label>
-                        <input type="time" id="pickupTime" required min="12:00" max="20:00">
+                        <input type="time" id="pickupTime" required min="14:00" max="20:00">
                     </div>
                 </div>
                 
@@ -1201,7 +1201,7 @@
                 <div class="info-box">
                     <strong>💰 Payment:</strong> Cash on Pickup or PayID<br>
                     <strong>📍 Pickup Only:</strong> No delivery available<br>
-                    <strong>🕒 Hours:</strong> 12:00 PM - 8:00 PM
+                    <strong>🕒 Hours:</strong> 2:00 PM - 8:00 PM
                 </div>
                 
                 <button type="button" class="submit-btn" onclick="submitOrder()">
@@ -1403,11 +1403,11 @@
             // Validate pickup time (12 PM - 8 PM)
             const [hours, minutes] = pickupTime.split(':').map(Number);
             const timeInMinutes = hours * 60 + minutes;
-            const startTime = 12 * 60; // 12 PM
+            const startTime = 14 * 60; // 2 PM
             const endTime = 20 * 60; // 8 PM
 
             if (timeInMinutes < startTime || timeInMinutes > endTime) {
-                showAlert('Pickup time must be between 12:00 PM and 8:00 PM');
+                showAlert('Pickup time must be between 2:00 PM and 8:00 PM');
                 return false;
             }
             
