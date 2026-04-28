@@ -674,8 +674,43 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                 </div>
             </div>
         </div>
+
+        <!-- WhatsApp Tab -->
+        <div id="whatsapp" class="tab-content">
+            <div style="max-width:700px;margin:40px auto;padding:20px;text-align:center;">
+                <div style="background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);padding:50px 40px;border-radius:20px;color:white;box-shadow:0 10px 40px rgba(37,211,102,0.3);margin-bottom:30px;">
+                    <div style="font-size:72px;margin-bottom:16px;">💬</div>
+                    <h2 style="margin:0 0 12px;font-size:28px;">WhatsApp Web</h2>
+                    <p style="margin:0 0 30px;opacity:0.9;font-size:16px;">Open WhatsApp Web to reply to customer messages</p>
+                    <a href="https://web.whatsapp.com/"
+                       target="_blank"
+                       style="display:inline-block;background:white;color:#25D366;padding:16px 40px;border-radius:12px;text-decoration:none;font-weight:700;font-size:18px;transition:all 0.3s ease;"
+                       onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)'"
+                       onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        🚀 Open WhatsApp Web
+                    </a>
+                    <div style="margin-top:30px;background:rgba(255,255,255,0.2);padding:14px 20px;border-radius:10px;display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;">
+                        <span style="opacity:0.9;">Business Number:</span>
+                        <strong style="font-size:18px;letter-spacing:1px;">+61 449 693 094</strong>
+                        <button onclick="copyWhatsAppPhone()"
+                                style="background:white;color:#25D366;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-weight:600;transition:transform 0.2s ease;"
+                                onmouseover="this.style.transform='scale(1.05)'"
+                                onmouseout="this.style.transform=''">📋 Copy</button>
+                    </div>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);padding:25px;border-radius:12px;border-left:4px solid #25D366;text-align:left;">
+                    <h3 style="color:#D4A574;margin-top:0;">💡 Tips</h3>
+                    <ul style="list-style:none;padding:0;margin:0;">
+                        <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1);">✅ Respond within 5 minutes for best customer satisfaction</li>
+                        <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1);">✅ Send order confirmations immediately after receiving orders</li>
+                        <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1);">✅ Keep WhatsApp Web open in a separate browser window</li>
+                        <li style="padding:8px 0;">✅ Enable desktop notifications for instant alerts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
     <!-- Order Details Modal -->
     <div class="modal" id="orderModal">
         <div class="modal-content">
@@ -686,139 +721,6 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             <div id="orderDetails">
                 <!-- Loaded via JS -->
             </div>
-        </div>
-        <!-- WhatsApp Tab -->
-        <div id="whatsapp" class="tab-content">
-            <div class="whatsapp-simple">
-                <div class="whatsapp-card">
-                    <div class="whatsapp-icon-large">💬</div>
-                    <h2>WhatsApp Messages</h2>
-                    <p>Click below to open WhatsApp Web and manage customer conversations</p>
-
-                    <div class="whatsapp-buttons">
-                        <a href="https://web.whatsapp.com/" target="_blank" class="whatsapp-primary-btn">
-                            🚀 Open WhatsApp Web
-                        </a>
-                        <a href="https://wa.me/61449693094" target="_blank" class="whatsapp-secondary-btn">
-                            📱 Open WhatsApp Mobile
-                        </a>
-                    </div>
-
-                    <div class="phone-number-display">
-                        <span>Business Number:</span>
-                        <strong>+61 449 693 094</strong>
-                        <button onclick="copyWhatsAppPhone()" class="copy-btn">📋 Copy</button>
-                    </div>
-                </div>
-
-                <div class="whatsapp-tips">
-                    <h3>💡 Tips for Managing Customer Messages:</h3>
-                    <ul>
-                        <li>✅ Respond within 5 minutes for best customer satisfaction</li>
-                        <li>✅ Use quick replies for common questions (pricing, hours, location)</li>
-                        <li>✅ Send order confirmations immediately after receiving orders</li>
-                        <li>✅ Keep WhatsApp Web open in a separate browser window</li>
-                        <li>✅ Enable desktop notifications for instant alerts</li>
-                    </ul>
-                </div>
-            </div>
-
-            <style>
-            .whatsapp-simple {
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-            .whatsapp-card {
-                background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-                padding: 40px;
-                border-radius: 20px;
-                text-align: center;
-                color: white;
-                box-shadow: 0 10px 40px rgba(37, 211, 102, 0.3);
-                margin-bottom: 30px;
-            }
-            .whatsapp-icon-large { font-size: 80px; margin-bottom: 20px; }
-            .whatsapp-card h2 { margin: 0 0 15px 0; font-size: 32px; }
-            .whatsapp-card p  { margin: 0 0 30px 0; opacity: 0.9; font-size: 18px; }
-            .whatsapp-buttons {
-                display: flex;
-                gap: 15px;
-                justify-content: center;
-                margin-bottom: 30px;
-                flex-wrap: wrap;
-            }
-            .whatsapp-primary-btn,
-            .whatsapp-secondary-btn {
-                padding: 15px 30px;
-                border-radius: 10px;
-                text-decoration: none;
-                font-weight: 600;
-                font-size: 16px;
-                transition: all 0.3s ease;
-                display: inline-block;
-            }
-            .whatsapp-primary-btn {
-                background: white;
-                color: #25D366;
-            }
-            .whatsapp-primary-btn:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            }
-            .whatsapp-secondary-btn {
-                background: rgba(255,255,255,0.2);
-                color: white;
-                border: 2px solid white;
-            }
-            .whatsapp-secondary-btn:hover {
-                background: white;
-                color: #25D366;
-                transform: translateY(-3px);
-            }
-            .phone-number-display {
-                background: rgba(255,255,255,0.2);
-                padding: 15px;
-                border-radius: 10px;
-                display: inline-flex;
-                align-items: center;
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .phone-number-display span { opacity: 0.9; }
-            .phone-number-display strong { font-size: 20px; letter-spacing: 1px; }
-            .copy-btn {
-                background: white;
-                color: #25D366;
-                border: none;
-                padding: 8px 15px;
-                border-radius: 6px;
-                cursor: pointer;
-                font-weight: 600;
-                transition: all 0.3s ease;
-            }
-            .copy-btn:hover { transform: scale(1.05); }
-            .whatsapp-tips {
-                background: rgba(255,255,255,0.05);
-                padding: 25px;
-                border-radius: 12px;
-                border-left: 4px solid #25D366;
-            }
-            .whatsapp-tips h3 { color: #D4A574; margin-top: 0; }
-            .whatsapp-tips ul { list-style: none; padding: 0; margin: 0; }
-            .whatsapp-tips li {
-                padding: 10px 0;
-                line-height: 1.6;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-            .whatsapp-tips li:last-child { border-bottom: none; }
-            @media (max-width: 768px) {
-                .whatsapp-card { padding: 30px 20px; }
-                .whatsapp-primary-btn,
-                .whatsapp-secondary-btn { width: 100%; text-align: center; }
-            }
-            </style>
         </div>
     </div>
 
