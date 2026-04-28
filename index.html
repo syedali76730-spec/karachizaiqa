@@ -1495,7 +1495,7 @@
             
             // Email to owner (always send)
             try {
-                const ownerResult = await emailjs.send('service_i0c2wnu', 'template_2tqdwrj', {
+                const ownerResult = await emailjs.send('service_reo6z45', 'template_2tqdwrj', {
                     order_number: orderData.orderNumber,
                     customer_name: orderData.customerName,
                     customer_phone: orderData.customerPhone || 'Not provided',
@@ -1506,7 +1506,7 @@
                     total: `A$${orderData.total.toFixed(2)}`,
                     pickup_date: orderData.pickupDate,
                     pickup_time: orderData.pickupTime,
-                    email: 'syed.ali.76730@gmail.com'
+                    email: 'zaiqakarachi1@gmail.com'
                 });
                 console.log('Owner email sent successfully:', ownerResult);
             } catch (error) {
@@ -1516,7 +1516,7 @@
             // Email to customer (only if email provided)
             if (orderData.customerEmail) {
                 try {
-                    const customerResult = await emailjs.send('service_i0c2wnu', 'template_je5rlah', {
+                    const customerResult = await emailjs.send('service_reo6z45', 'template_je5rlah', {
                         order_number: orderData.orderNumber,
                         customer_name: orderData.customerName,
                         product: productText,
