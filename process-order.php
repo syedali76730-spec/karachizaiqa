@@ -36,15 +36,15 @@ if (empty($data['pickupDate']) || empty($data['pickupTime'])) {
     jsonResponse(false, 'Pickup date and time are required');
 }
 
-// Validate pickup time (2 PM - 7:30 PM)
+// Validate pickup time (2 PM - 8 PM)
 $pickupTime = $data['pickupTime'];
 list($hours, $minutes) = explode(':', $pickupTime);
 $timeInMinutes = ((int)$hours * 60) + (int)$minutes;
 $startTime = 14 * 60; // 2 PM
-$endTime = 19 * 60 + 30; // 7:30 PM
+$endTime = 20 * 60; // 8 PM
 
 if ($timeInMinutes < $startTime || $timeInMinutes > $endTime) {
-    jsonResponse(false, 'Pickup time must be between 2:00 PM and 7:30 PM');
+    jsonResponse(false, 'Pickup time must be between 2:00 PM and 8:00 PM');
 }
 
 // Sanitize inputs
