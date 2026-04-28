@@ -561,7 +561,10 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
         <div id="orders" class="tab-content">
             <div class="content-card">
                 <div class="card-header">
-                    <h2 class="card-title">All Orders</h2>
+                    <h2 class="card-title">All Orders <span id="refreshIndicator" style="font-size: 0.8rem; color: #787878; font-weight: 400;"></span></h2>
+                    <button class="btn btn-secondary" onclick="loadOrders(); loadDashboard();" style="margin-right: 0.5rem;">
+                        🔄 Refresh Now
+                    </button>
                     <button class="btn btn-primary" onclick="exportOrders()">📥 Export CSV</button>
                 </div>
                 
@@ -688,12 +691,14 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
     <script>
         // State
         let currentOrders = [];
+        let lastOrderCount = 0;
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadDashboard();
             loadOrders();
             loadPricing();
+            startAutoRefresh(); // Start auto-refresh
         });
         
         // Tab Switching
@@ -738,27 +743,85 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
         
         // Load Orders
         async function loadOrders() {
+            const indicator = document.getElementById('refreshIndicator');
+            if (indicator) {
+                indicator.textContent = '🔄 Refreshing...';
+                indicator.style.color = '#D4A574';
+            }
+
             const status = document.getElementById('statusFilter')?.value || '';
             const dateFrom = document.getElementById('dateFrom')?.value || '';
             const dateTo = document.getElementById('dateTo')?.value || '';
-            
+
             try {
-                const params = new URLSearchParams({ 
+                const params = new URLSearchParams({
                     action: 'orders',
                     status,
                     dateFrom,
                     dateTo
                 });
-                
+
                 const response = await fetch(`admin-api.php?${params}`);
                 const result = await response.json();
-                
+
                 if (result.success) {
+                    if (result.data.length > lastOrderCount && lastOrderCount > 0) {
+                        // New order detected
+                        console.log('[New Order] Detected!');
+
+                        // Optional: Play notification sound
+                        try {
+                            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUKfj8LJoHAU2jdXyz3kqBSF1xe/glEILElyx6OyrWBELRp/g8r1rIAUsgs/y2Yg2BRxrvOzu');
+                            audio.play();
+                        } catch (e) {
+                            // Ignore if sound fails
+                        }
+                    }
+                    lastOrderCount = result.data.length;
+
                     currentOrders = result.data;
                     renderOrdersTable(result.data, 'ordersTable');
+
+                    if (indicator) {
+                        const now = new Date();
+                        indicator.textContent = `(Updated: ${now.toLocaleTimeString()})`;
+                        indicator.style.color = '#787878';
+                    }
                 }
             } catch (error) {
                 console.error('Failed to load orders:', error);
+            }
+        }
+
+        // Auto-refresh timer
+        let autoRefreshInterval = null;
+
+        // Start auto-refresh
+        function startAutoRefresh() {
+            // Refresh every 30 seconds
+            autoRefreshInterval = setInterval(function() {
+                console.log('[Auto-Refresh] Reloading orders...');
+
+                // Only refresh if we're on Orders or Dashboard tab
+                const activeTab = document.querySelector('.tab-content.active');
+                if (activeTab && (activeTab.id === 'orders' || activeTab.id === 'dashboard')) {
+                    if (activeTab.id === 'orders') {
+                        loadOrders();
+                    } else {
+                        loadDashboard();
+                    }
+                }
+            }, 30000); // 30 seconds
+
+            console.log('[Auto-Refresh] Started (every 30 seconds)');
+        }
+
+        // Stop auto-refresh
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                console.log('[Auto-Refresh] Stopped');
             }
         }
         
@@ -1186,6 +1249,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
         // Logout
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
+                stopAutoRefresh(); // Stop refresh before logout
                 window.location.href = 'admin-logout.php';
             }
         }
