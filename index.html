@@ -366,43 +366,6 @@
             font-size: 0.9rem;
         }
         
-        .addon-qty {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--border-subtle);
-        }
-        
-        .addon-card.selected .addon-qty {
-            display: flex;
-        }
-        
-        .addon-qty-btn {
-            width: 28px;
-            height: 28px;
-            border: none;
-            border-radius: 6px;
-            background: var(--forest-green);
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .addon-qty-btn:hover {
-            background: var(--forest-dark);
-        }
-        
-        .addon-qty-display {
-            font-weight: 700;
-            min-width: 30px;
-            text-align: center;
-            color: var(--text-primary);
-        }
         
         /* Form Elements */
         .form-group {
@@ -1043,7 +1006,7 @@
                     <div class="product-card" data-product-id="1" data-price="14" onclick="toggleProduct(1)">
                         <div class="product-header">
                             <div class="product-info">
-                                <h3>Regular Plate</h3>
+                                <h3>Regular Plate <span style="font-size: 0.75rem; color: #787878; font-weight: 400;">(500ml)</span></h3>
                                 <p class="product-desc">Perfect for one person</p>
                                 <p class="quantity-remaining" id="qty-remaining-1">Loading...</p>
                             </div>
@@ -1062,7 +1025,7 @@
                     <div class="product-card" data-product-id="2" data-price="22" onclick="toggleProduct(2)">
                         <div class="product-header">
                             <div class="product-info">
-                                <h3>Large Plate</h3>
+                                <h3>Large Plate <span style="font-size: 0.75rem; color: #787878; font-weight: 400;">(750ml)</span></h3>
                                 <p class="product-desc">Great for sharing or extra hungry!</p>
                                 <p class="quantity-remaining" id="qty-remaining-2">Loading...</p>
                             </div>
@@ -1083,68 +1046,38 @@
             <!-- Add-ons Section -->
             <div class="order-section">
                 <div class="section-header">
-                    <div class="section-icon">➕</div>
-                    <h2 class="section-title">Add-Ons ($2 each)</h2>
+                    <div class="section-icon">🎁</div>
+                    <h2 class="section-title">Extras <span style="color: #D4A574; font-weight: 900;">(FREE)</span></h2>
                 </div>
                 
                 <div class="addons-grid">
-                    <div class="addon-card" data-addon-id="1" data-price="2" onclick="toggleAddon(1)">
+                    <div class="addon-card" data-addon-id="1" data-price="0" onclick="toggleAddon(1)">
                         <div class="addon-header">
                             <span class="addon-name">Roti</span>
-                            <span class="addon-price">$2</span>
-                        </div>
-                        <div class="addon-qty">
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(1, -1)">−</button>
-                            <span class="addon-qty-display" id="addon-qty-1">1</span>
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(1, 1)">+</button>
                         </div>
                     </div>
-                    
-                    <div class="addon-card" data-addon-id="2" data-price="2" onclick="toggleAddon(2)">
+
+                    <div class="addon-card" data-addon-id="2" data-price="0" onclick="toggleAddon(2)">
                         <div class="addon-header">
-                            <span class="addon-name">Adrak</span>
-                            <span class="addon-price">$2</span>
-                        </div>
-                        <div class="addon-qty">
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(2, -1)">−</button>
-                            <span class="addon-qty-display" id="addon-qty-2">1</span>
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(2, 1)">+</button>
+                            <span class="addon-name">Ginger</span>
                         </div>
                     </div>
-                    
-                    <div class="addon-card" data-addon-id="3" data-price="2" onclick="toggleAddon(3)">
+
+                    <div class="addon-card" data-addon-id="3" data-price="0" onclick="toggleAddon(3)">
                         <div class="addon-header">
                             <span class="addon-name">Extra Spice</span>
-                            <span class="addon-price">$2</span>
-                        </div>
-                        <div class="addon-qty">
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(3, -1)">−</button>
-                            <span class="addon-qty-display" id="addon-qty-3">1</span>
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(3, 1)">+</button>
                         </div>
                     </div>
-                    
-                    <div class="addon-card" data-addon-id="4" data-price="2" onclick="toggleAddon(4)">
+
+                    <div class="addon-card" data-addon-id="4" data-price="0" onclick="toggleAddon(4)">
                         <div class="addon-header">
                             <span class="addon-name">Fried Onions</span>
-                            <span class="addon-price">$2</span>
-                        </div>
-                        <div class="addon-qty">
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(4, -1)">−</button>
-                            <span class="addon-qty-display" id="addon-qty-4">1</span>
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(4, 1)">+</button>
                         </div>
                     </div>
-                    
-                    <div class="addon-card" data-addon-id="5" data-price="2" onclick="toggleAddon(5)">
+
+                    <div class="addon-card" data-addon-id="5" data-price="0" onclick="toggleAddon(5)">
                         <div class="addon-header">
                             <span class="addon-name">Beverage</span>
-                            <span class="addon-price">$2</span>
-                        </div>
-                        <div class="addon-qty">
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(5, -1)">−</button>
-                            <span class="addon-qty-display" id="addon-qty-5">1</span>
-                            <button type="button" class="addon-qty-btn" onclick="event.stopPropagation(); changeAddonQty(5, 1)">+</button>
                         </div>
                     </div>
                 </div>
@@ -1186,7 +1119,7 @@
                     
                     <div class="form-group">
                         <label for="pickupTime">Pickup Time *</label>
-                        <input type="time" id="pickupTime" required min="14:00" max="19:30">
+                        <input type="time" id="pickupTime" required min="12:00" max="20:00">
                     </div>
                 </div>
                 
@@ -1215,7 +1148,7 @@
                 <div class="info-box">
                     <strong>💰 Payment:</strong> Cash on Pickup or PayID<br>
                     <strong>📍 Pickup Only:</strong> No delivery available<br>
-                    <strong>🕒 Hours:</strong> 2:00 PM - 7:30 PM
+                    <strong>🕒 Hours:</strong> 12:00 PM - 8:00 PM
                 </div>
                 
                 <button type="button" class="submit-btn" onclick="submitOrder()">
@@ -1297,29 +1230,17 @@
         // Toggle Add-on Selection
         function toggleAddon(addonId) {
             const card = document.querySelector(`[data-addon-id="${addonId}"]`);
-            
+
             if (orderState.addons[addonId]) {
                 // Deselect
                 delete orderState.addons[addonId];
                 card.classList.remove('selected');
             } else {
-                // Select
+                // Select (always quantity 1)
                 orderState.addons[addonId] = 1;
                 card.classList.add('selected');
-                document.getElementById(`addon-qty-${addonId}`).textContent = 1;
             }
-            
-            updateSummary();
-        }
-        
-        // Change Add-on Quantity
-        function changeAddonQty(addonId, delta) {
-            if (!orderState.addons[addonId]) return;
-            
-            const current = orderState.addons[addonId];
-            const newQty = Math.max(1, current + delta);
-            orderState.addons[addonId] = newQty;
-            document.getElementById(`addon-qty-${addonId}`).textContent = newQty;
+
             updateSummary();
         }
         
@@ -1337,13 +1258,11 @@
                 itemsText.push(`${qty}x ${name}`);
             }
             
-            // Calculate add-ons
+            // Calculate add-ons (free)
+            const addonNameMap = ['', 'Roti', 'Ginger', 'Extra Spice', 'Fried Onions', 'Beverage'];
             for (let addonId in orderState.addons) {
                 const qty = orderState.addons[addonId];
-                const price = 2; // All add-ons are $2
-                const names = ['', 'Roti', 'Adrak', 'Extra Spice', 'Fried Onions', 'Beverage'];
-                const name = names[addonId];
-                subtotal += price * qty;
+                const name = addonNameMap[addonId];
                 itemsText.push(`${qty}x ${name}`);
             }
             
@@ -1400,14 +1319,14 @@
                 return false;
             }
             
-            // Validate pickup time (2 PM - 7:30 PM)
+            // Validate pickup time (12 PM - 8 PM)
             const [hours, minutes] = pickupTime.split(':').map(Number);
             const timeInMinutes = hours * 60 + minutes;
-            const startTime = 14 * 60;
-            const endTime = 19 * 60 + 30;
-            
+            const startTime = 12 * 60; // 12 PM
+            const endTime = 20 * 60; // 8 PM
+
             if (timeInMinutes < startTime || timeInMinutes > endTime) {
-                showAlert('Pickup time must be between 2:00 PM and 7:30 PM');
+                showAlert('Pickup time must be between 12:00 PM and 8:00 PM');
                 return false;
             }
             
@@ -1481,12 +1400,12 @@
             
             // Build order summary text for add-ons
             let addonText = 'None';
-            const addonNames = ['', 'Roti', 'Adrak (Ginger)', 'Extra Spice', 'Fried Onions', 'Beverage (Pepsi/7UP)'];
+            const addonNames = ['', 'Roti', 'Ginger', 'Extra Spice', 'Fried Onions', 'Beverage'];
             if (Object.keys(orderData.addons).length > 0) {
                 addonText = '';
                 for (let aid in orderData.addons) {
                     const qty = orderData.addons[aid];
-                    addonText += `${qty}x ${addonNames[aid]} (A$2 each)\n`;
+                    addonText += `${qty}x ${addonNames[aid]}\n`;
                 }
             }
             
