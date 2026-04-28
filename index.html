@@ -977,6 +977,59 @@
             margin-top: 0.35rem;
             display: block;
         }
+
+        /* Location Modal */
+        .location-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .location-modal-overlay.active {
+            display: flex;
+        }
+
+        .location-modal {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+
+        .location-modal-header {
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+            padding: 1.5rem;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .location-modal-body {
+            padding: 2rem;
+        }
+
+        .location-image:hover img {
+            transform: scale(1.02);
+        }
+
+        .location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 95, 45, 0.4);
+        }
     </style>
 </head>
 
@@ -1156,7 +1209,35 @@
                 </button>
             </div>
         </div>
-        
+
+        <!-- Pickup Location Section -->
+        <div class="order-section" style="margin-top: 2rem;">
+            <div class="section-header">
+                <div class="section-icon">📍</div>
+                <h2 class="section-title">Pick Up Location</h2>
+            </div>
+
+            <div class="location-card" style="background: var(--bg-card); border-radius: 16px; padding: 1.5rem; border: 2px solid var(--border-subtle);">
+                <div class="location-address" style="margin-bottom: 1rem;">
+                    <h3 style="color: var(--mustard); font-family: 'Crimson Pro', serif; font-size: 1.25rem; margin-bottom: 0.5rem;">Karachi Zaiqa</h3>
+                    <p style="color: var(--text-secondary); font-size: 1rem; margin-bottom: 0.5rem;">
+                        📍 58 Waruda St, Yagoona NSW 2199, Australia
+                    </p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        📌 Coordinates: -31.274833, 150.959876
+                    </p>
+                </div>
+
+                <div class="location-image" style="margin: 1rem 0; border-radius: 12px; overflow: hidden; cursor: pointer;" onclick="openLocationModal()">
+                    <img src="loc.jpg" alt="Pickup Location Map" style="width: 100%; height: auto; display: block; transition: transform 0.3s;">
+                </div>
+
+                <a href="https://maps.app.goo.gl/Nv5heSRHFjRgU19E6" target="_blank" class="location-btn" style="display: block; text-align: center; padding: 1rem; background: linear-gradient(135deg, var(--forest-green) 0%, var(--forest-dark) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; transition: all 0.3s; margin-top: 1rem;">
+                    🗺️ Open in Google Maps
+                </a>
+            </div>
+        </div>
+
         <!-- Loading State -->
         <div class="loading" id="loadingState">
             <div class="spinner"></div>
@@ -1564,6 +1645,17 @@
                 loadMenuData();
             }
         }, 1000);
+
+        // Location Modal Functions
+        function openLocationModal() {
+            document.getElementById('locationModal').classList.add('active');
+        }
+
+        function closeLocationModal(event) {
+            if (!event || event.target.id === 'locationModal') {
+                document.getElementById('locationModal').classList.remove('active');
+            }
+        }
     </script>
                 <!-- Track Order Widget -->
         <div class="track-order-fab" onclick="openTrackOrderModal()">
@@ -1717,6 +1809,25 @@
             document.getElementById('trackSearchInput').focus();
         }
         </script>
-         
+
+        <!-- Location Image Modal -->
+        <div class="location-modal-overlay" id="locationModal" onclick="closeLocationModal(event)">
+            <div class="location-modal" onclick="event.stopPropagation()">
+                <div class="location-modal-header">
+                    <h2 style="color: var(--cream); margin: 0;">Pickup Location</h2>
+                    <button class="close-modal" onclick="closeLocationModal()" style="background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; color: white; font-size: 1.5rem; cursor: pointer;">×</button>
+                </div>
+                <div class="location-modal-body">
+                    <img src="loc.jpg" alt="Location Map" style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 1rem;">
+                    <p style="color: var(--text-secondary); text-align: center; margin-bottom: 1rem;">
+                        📍 58 Waruda St, Yagoona NSW 2199, Australia
+                    </p>
+                    <a href="https://maps.app.goo.gl/Nv5heSRHFjRgU19E6" target="_blank" class="location-btn" style="display: block; text-align: center; padding: 1rem; background: linear-gradient(135deg, var(--forest-green) 0%, var(--forest-dark) 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 700;">
+                        🗺️ Open in Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+
 </body>
 </html>
