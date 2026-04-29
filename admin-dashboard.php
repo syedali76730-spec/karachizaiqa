@@ -225,6 +225,59 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
             background: #666;
             color: white;
         }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Notification Toast */
+        .notification-container {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .notification {
+            padding: 0.875rem 1.25rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 320px;
+            animation: notifSlideIn 0.3s ease, notifFadeOut 0.4s ease 2.6s forwards;
+        }
+
+        .notification.success { background: #28a745; }
+        .notification.error   { background: #dc3545; }
+
+        @keyframes notifSlideIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+
+        @keyframes notifFadeOut {
+            from { opacity: 1; }
+            to   { opacity: 0; pointer-events: none; }
+        }
+
+        /* Order row delete fade */
+        @keyframes rowFadeOut {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+
+        .row-deleting td {
+            animation: rowFadeOut 0.4s ease forwards;
+        }
         
         .btn-sm {
             padding: 0.4rem 0.8rem;
@@ -711,6 +764,21 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-header">
+                <h2 class="modal-title" style="color: #dc3545;">🗑️ Delete Order</h2>
+                <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <p id="deleteConfirmMessage" style="margin-bottom: 1.5rem; line-height: 1.6;"></p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">🗑️ Delete</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Order Details Modal -->
     <div class="modal" id="orderModal">
         <div class="modal-content">
@@ -886,9 +954,10 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                     <tbody>
             `;
             
+            const deletableStatuses = ['picked_up', 'cancelled'];
             orders.forEach(order => {
                 html += `
-                    <tr>
+                    <tr id="order-row-${order.id}">
                         <td><strong>${order.order_number}</strong></td>
                         <td>${order.customer_name}<br><small>${order.customer_phone || order.customer_email || ''}</small></td>
                         <td>${order.items_summary}</td>
@@ -898,6 +967,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                         <td>
                             <button class="btn btn-sm btn-primary" onclick="viewOrder(${order.id})">View</button>
                             ${order.status !== 'picked_up' ? `<button class="btn btn-sm btn-success" onclick="updateStatus(${order.id}, '${getNextStatus(order.status)}')">Next</button>` : ''}
+                            ${deletableStatuses.includes(order.status) ? `<button class="btn btn-sm btn-danger" onclick="deleteOrder(${order.id}, '${order.order_number}')">🗑️ Delete</button>` : ''}
                         </td>
                     </tr>
                 `;
@@ -1296,6 +1366,66 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                 showNotification('Phone number copied: +61449693094', 'success');
             });
         }
+
+        // Delete Order
+        let pendingDeleteId = null;
+        let pendingDeleteNumber = null;
+
+        function deleteOrder(orderId, orderNumber) {
+            pendingDeleteId = orderId;
+            pendingDeleteNumber = orderNumber;
+            document.getElementById('deleteConfirmMessage').textContent =
+                `Are you sure you want to permanently delete order #${orderNumber}? This action cannot be undone.`;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            pendingDeleteId = null;
+            pendingDeleteNumber = null;
+        }
+
+        async function confirmDelete() {
+            if (!pendingDeleteId) return;
+
+            const orderId = pendingDeleteId;
+            const orderNumber = pendingDeleteNumber;
+            closeDeleteModal();
+
+            try {
+                const response = await fetch('admin-api.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'deleteOrder', orderId: orderId })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    const row = document.getElementById(`order-row-${orderId}`);
+                    if (row) {
+                        row.classList.add('row-deleting');
+                        setTimeout(() => row.remove(), 450);
+                    }
+                    showNotification(`Order #${orderNumber} deleted successfully`, 'success');
+                    loadDashboard();
+                } else {
+                    showNotification(result.message || 'Failed to delete order', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to delete order: ' + error.message, 'error');
+            }
+        }
+
+        function showNotification(message, type) {
+            const container = document.getElementById('notificationContainer');
+            const el = document.createElement('div');
+            el.className = `notification ${type}`;
+            el.textContent = message;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
     </script>
+
+    <div class="notification-container" id="notificationContainer"></div>
 </body>
 </html>
