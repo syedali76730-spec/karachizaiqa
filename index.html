@@ -646,34 +646,39 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 60px;
-            height: 60px;
             background: linear-gradient(135deg, #8B1A1A 0%, #6B1414 100%);
-            border-radius: 50%;
+            border-radius: 50px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(139, 26, 26, 0.4);
+            box-shadow: 0 4px 12px rgba(139, 26, 26, 0.4);
             z-index: 9998;
             transition: all 0.3s ease;
             animation: trackPulse 2s infinite;
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            white-space: nowrap;
         }
-         
+
         .track-order-fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(139, 26, 26, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 26, 26, 0.6);
         }
-         
+
         .track-order-fab svg {
-            width: 32px;
-            height: 32px;
+            width: 26px;
+            height: 26px;
             fill: white;
+            flex-shrink: 0;
         }
-         
+
         @keyframes trackPulse {
-            0%, 100% { box-shadow: 0 4px 20px rgba(139, 26, 26, 0.4); }
-            50% { box-shadow: 0 4px 30px rgba(139, 26, 26, 0.8), 0 0 0 10px rgba(139, 26, 26, 0.1); }
+            0%, 100% { box-shadow: 0 4px 12px rgba(139, 26, 26, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(139, 26, 26, 0.8); }
         }
          
         .track-modal-overlay {
@@ -1172,7 +1177,7 @@
                     
                     <div class="form-group">
                         <label for="pickupTime">Pickup Time *</label>
-                        <input type="time" id="pickupTime" required min="12:00" max="20:00">
+                        <input type="time" id="pickupTime" required min="14:00" max="20:00">
                     </div>
                 </div>
                 
@@ -1201,7 +1206,7 @@
                 <div class="info-box">
                     <strong>💰 Payment:</strong> Cash on Pickup or PayID<br>
                     <strong>📍 Pickup Only:</strong> No delivery available<br>
-                    <strong>🕒 Hours:</strong> 12:00 PM - 8:00 PM
+                    <strong>🕒 Hours:</strong> 2:00 PM - 8:00 PM
                 </div>
                 
                 <button type="button" class="submit-btn" onclick="submitOrder()">
@@ -1403,11 +1408,11 @@
             // Validate pickup time (12 PM - 8 PM)
             const [hours, minutes] = pickupTime.split(':').map(Number);
             const timeInMinutes = hours * 60 + minutes;
-            const startTime = 12 * 60; // 12 PM
+            const startTime = 14 * 60; // 2 PM
             const endTime = 20 * 60; // 8 PM
 
             if (timeInMinutes < startTime || timeInMinutes > endTime) {
-                showAlert('Pickup time must be between 12:00 PM and 8:00 PM');
+                showAlert('Pickup time must be between 2:00 PM and 8:00 PM');
                 return false;
             }
             
@@ -1495,7 +1500,7 @@
             
             // Email to owner (always send)
             try {
-                const ownerResult = await emailjs.send('service_i0c2wnu', 'template_2tqdwrj', {
+                const ownerResult = await emailjs.send('service_reo6z45', 'template_2tqdwrj', {
                     order_number: orderData.orderNumber,
                     customer_name: orderData.customerName,
                     customer_phone: orderData.customerPhone || 'Not provided',
@@ -1506,7 +1511,7 @@
                     total: `A$${orderData.total.toFixed(2)}`,
                     pickup_date: orderData.pickupDate,
                     pickup_time: orderData.pickupTime,
-                    email: 'syed.ali.76730@gmail.com'
+                    email: 'zaiqakarachi1@gmail.com'
                 });
                 console.log('Owner email sent successfully:', ownerResult);
             } catch (error) {
@@ -1516,7 +1521,7 @@
             // Email to customer (only if email provided)
             if (orderData.customerEmail) {
                 try {
-                    const customerResult = await emailjs.send('service_i0c2wnu', 'template_je5rlah', {
+                    const customerResult = await emailjs.send('service_reo6z45', 'template_je5rlah', {
                         order_number: orderData.orderNumber,
                         customer_name: orderData.customerName,
                         product: productText,
@@ -1665,6 +1670,7 @@
                 <circle cx="8" cy="10" r="1.5"/>
                 <circle cx="16" cy="10" r="1.5"/>
             </svg>
+            <span>Track Order</span>
         </div>
          
         <div class="track-modal-overlay" id="trackOrderModal" onclick="closeTrackOrderModal(event)">
@@ -1828,6 +1834,93 @@
                 </div>
             </div>
         </div>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/61449693094?text=Hi%20Karachi%20Zaiqa!%20I'd%20like%20to%20place%20an%20order%20or%20ask%20a%20question."
+   class="whatsapp-float"
+   target="_blank"
+   aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 32 32" class="whatsapp-icon">
+        <path fill="currentColor" d="M16 0C7.164 0 0 7.164 0 16c0 2.825.736 5.478 2.024 7.776L0 32l8.416-2.208A15.923 15.923 0 0016 32c8.836 0 16-7.164 16-16S24.836 0 16 0zm0 29.333c-2.548 0-4.952-.708-7.013-1.94l-.503-.308-5.213 1.367 1.391-5.083-.338-.52A13.264 13.264 0 012.667 16c0-7.364 5.969-13.333 13.333-13.333S29.333 8.636 29.333 16 23.364 29.333 16 29.333z"/>
+        <path fill="currentColor" d="M23.197 19.803c-.384-.192-2.273-1.121-2.625-1.249-.352-.128-.608-.192-.864.192-.256.384-.993 1.249-1.217 1.505-.224.256-.448.288-.832.096-.384-.192-1.621-.597-3.087-1.905-1.141-.992-1.913-2.217-2.137-2.601-.224-.384-.024-.592.168-.783.173-.173.384-.448.576-.672.192-.224.256-.384.384-.64.128-.256.064-.48-.032-.672-.096-.192-.864-2.081-1.184-2.849-.312-.747-.628-.646-.864-.658-.224-.011-.48-.013-.736-.013s-.672.096-.992.48c-.32.384-1.216 1.185-1.216 2.889 0 1.704 1.248 3.345 1.424 3.577.176.233 2.473 3.776 5.989 5.296.837.361 1.491.577 2.001.739.84.267 1.605.229 2.209.139.673-.101 2.073-.848 2.365-1.667.292-.819.292-1.52.205-1.667-.087-.147-.343-.243-.727-.435z"/>
+    </svg>
+    <span class="whatsapp-text">Chat with us</span>
+</a>
+
+<style>
+.whatsapp-float {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    border-radius: 50px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    animation: whatsappPulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+    background: #128C7E;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+.whatsapp-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.whatsapp-text {
+    white-space: nowrap;
+}
+
+@keyframes whatsappPulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4); }
+    50%       { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.8); }
+}
+
+@media (max-width: 768px) {
+    .track-order-fab {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    .track-order-fab svg {
+        width: 22px;
+        height: 22px;
+    }
+    .whatsapp-float {
+        bottom: 85px;
+        right: 15px;
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    .whatsapp-icon {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+@media (max-width: 380px) {
+    .whatsapp-text { display: none; }
+    .whatsapp-float {
+        padding: 12px;
+        border-radius: 50%;
+    }
+}
+</style>
 
 </body>
 </html>
