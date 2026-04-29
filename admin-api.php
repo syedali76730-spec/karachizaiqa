@@ -57,7 +57,11 @@ switch ($action) {
     case 'export':
         exportOrders();
         break;
-    
+
+    case 'deleteOrder':
+        deleteOrder();
+        break;
+
     default:
         jsonResponse(false, 'Invalid action: ' . $action);
 }
@@ -482,6 +486,57 @@ function updateInventory() {
     } catch (Exception $e) {
         error_log("Update Inventory Error: " . $e->getMessage());
         jsonResponse(false, 'Failed to update inventory');
+    }
+}
+
+// Delete Order
+function deleteOrder() {
+    try {
+        $input = file_get_contents('php://input');
+        $data = json_decode($input, true);
+
+        $orderId = isset($data['orderId']) ? (int)$data['orderId'] : 0;
+
+        if (!$orderId) {
+            jsonResponse(false, 'Order ID required');
+        }
+
+        $conn = getDBConnection();
+
+        $stmt = $conn->prepare("SELECT id, order_number, status FROM orders WHERE id = ?");
+        $stmt->execute([$orderId]);
+        $order = $stmt->fetch();
+
+        if (!$order) {
+            jsonResponse(false, 'Order not found');
+        }
+
+        $deletableStatuses = ['cancelled', 'picked_up'];
+        if (!in_array($order['status'], $deletableStatuses)) {
+            jsonResponse(false, 'Only cancelled or picked-up orders can be deleted');
+        }
+
+        $conn->beginTransaction();
+
+        $stmt = $conn->prepare("DELETE FROM order_addons WHERE order_id = ?");
+        $stmt->execute([$orderId]);
+
+        $stmt = $conn->prepare("DELETE FROM order_items WHERE order_id = ?");
+        $stmt->execute([$orderId]);
+
+        $stmt = $conn->prepare("DELETE FROM orders WHERE id = ?");
+        $stmt->execute([$orderId]);
+
+        $conn->commit();
+
+        jsonResponse(true, 'Order deleted successfully');
+
+    } catch (Exception $e) {
+        if (isset($conn) && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
+        error_log("Delete Order Error: " . $e->getMessage());
+        jsonResponse(false, 'Failed to delete order');
     }
 }
 
