@@ -1137,6 +1137,34 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(44, 95, 45, 0.4);
         }
+
+        /* Pickup Time Select Wrapper */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '▾';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--mustard);
+            pointer-events: none;
+            font-size: 1.3rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        select option:disabled {
+            color: #555555;
+        }
     </style>
 </head>
 
@@ -1279,7 +1307,11 @@
                     
                     <div class="form-group">
                         <label for="pickupTime">Pickup Time *</label>
-                        <input type="time" id="pickupTime" required min="14:00" max="20:00">
+                        <div class="select-wrapper">
+                            <select id="pickupTime" required>
+                                <option value="">Select pickup time...</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 
@@ -1308,7 +1340,7 @@
                 <div class="info-box">
                     <strong>💰 Payment:</strong> Cash on Pickup or PayID<br>
                     <strong>📍 Pickup Only:</strong> No delivery available<br>
-                    <strong>🕒 Hours:</strong> 2:00 PM - 8:00 PM
+                    <strong>🕒 Hours:</strong> 12:00 PM - 8:00 PM
                 </div>
                 
                 <button type="button" class="submit-btn" onclick="submitOrder()">
@@ -1412,6 +1444,78 @@
         
         // Set minimum pickup date
         document.getElementById('pickupDate').min = new Date().toISOString().split('T')[0];
+
+        // Initialize pickup time dropdown and keep it in sync with date selection
+        initPickupTimeDropdown();
+        document.getElementById('pickupDate').addEventListener('change', updatePickupTimeOptions);
+
+        // Build the 17 time slots: 12:00 PM → 8:00 PM every 30 min
+        function generatePickupTimes() {
+            const times = [];
+            for (let hour = 12; hour <= 20; hour++) {
+                times.push(formatTime12(hour, 0));
+                if (hour < 20) times.push(formatTime12(hour, 30));
+            }
+            return times;
+        }
+
+        function formatTime12(hour, minutes) {
+            const period = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            return `${displayHour}:${minutes.toString().padStart(2, '0')} ${period}`;
+        }
+
+        function initPickupTimeDropdown() {
+            const select = document.getElementById('pickupTime');
+            select.innerHTML = '<option value="">Select pickup time...</option>';
+            generatePickupTimes().forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                select.appendChild(opt);
+            });
+            updatePickupTimeOptions();
+        }
+
+        // Disable past time slots when same-day pickup is selected
+        function updatePickupTimeOptions() {
+            const select = document.getElementById('pickupTime');
+            const selectedDate = document.getElementById('pickupDate').value;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const isToday = selectedDate === todayStr;
+
+            const now = new Date();
+            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+
+            let firstAvailable = null;
+
+            Array.from(select.options).forEach(option => {
+                if (!option.value) return;
+
+                // Parse "12:00 PM" style to total minutes for comparison
+                const match = option.value.match(/^(\d+):(\d+)\s+(AM|PM)$/);
+                if (!match) return;
+                let h = parseInt(match[1]);
+                const m = parseInt(match[2]);
+                const period = match[3];
+                if (period === 'PM' && h !== 12) h += 12;
+                if (period === 'AM' && h === 12) h = 0;
+                const optMinutes = h * 60 + m;
+
+                if (isToday && optMinutes <= currentTotalMinutes) {
+                    option.disabled = true;
+                } else {
+                    option.disabled = false;
+                    if (!firstAvailable) firstAvailable = option;
+                }
+            });
+
+            // Auto-select first available if current selection is disabled or empty
+            const currentOpt = select.options[select.selectedIndex];
+            if (!select.value || (currentOpt && currentOpt.disabled)) {
+                select.value = firstAvailable ? firstAvailable.value : '';
+            }
+        }
         
         // Toggle Product Selection (Multiple)
         function toggleProduct(productId) {
@@ -1530,18 +1634,7 @@
             }
             
             if (!pickupTime) {
-                showAlert('Please select a pickup time');
-                return false;
-            }
-            
-            // Validate pickup time (12 PM - 8 PM)
-            const [hours, minutes] = pickupTime.split(':').map(Number);
-            const timeInMinutes = hours * 60 + minutes;
-            const startTime = 14 * 60; // 2 PM
-            const endTime = 20 * 60; // 8 PM
-
-            if (timeInMinutes < startTime || timeInMinutes > endTime) {
-                showAlert('Pickup time must be between 2:00 PM and 8:00 PM');
+                showAlert('Please select a pickup time between 12:00 PM - 8:00 PM');
                 return false;
             }
             
