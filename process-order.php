@@ -36,15 +36,16 @@ if (empty($data['pickupDate']) || empty($data['pickupTime'])) {
     jsonResponse(false, 'Pickup date and time are required');
 }
 
-// Validate pickup time (2 PM - 8 PM)
+// Validate pickup time — must be one of the 30-min slots between 12 PM and 8 PM
 $pickupTime = $data['pickupTime'];
-list($hours, $minutes) = explode(':', $pickupTime);
-$timeInMinutes = ((int)$hours * 60) + (int)$minutes;
-$startTime = 14 * 60; // 2 PM
-$endTime = 20 * 60; // 8 PM
-
-if ($timeInMinutes < $startTime || $timeInMinutes > $endTime) {
-    jsonResponse(false, 'Pickup time must be between 2:00 PM and 8:00 PM');
+$allowedTimes = [
+    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+    '18:00', '18:30', '19:00', '19:30', '20:00'
+];
+$pickupTime24 = date('H:i', strtotime($pickupTime));
+if (!in_array($pickupTime24, $allowedTimes)) {
+    jsonResponse(false, 'Invalid pickup time. Please select a time between 12:00 PM - 8:00 PM in 30-minute intervals.');
 }
 
 // Sanitize inputs
