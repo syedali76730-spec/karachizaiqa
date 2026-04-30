@@ -1584,8 +1584,8 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Generate tracking URL
-                    const trackingURL = `https://karachizaiqa.com/track-order-widget.html?order=${result.data.orderNumber}`;
+                    // Generate tracking URL using current host so it works on any domain/localhost
+                    const trackingURL = `${window.location.origin}/track-order-widget.html?order=${result.data.orderNumber}`;
                     result.data.trackingURL = trackingURL;
 
                     // Send email notifications via EmailJS
@@ -1661,7 +1661,7 @@
                         total: `A$${orderData.total.toFixed(2)}`,
                         pickup_date: orderData.pickupDate,
                         pickup_time: orderData.pickupTime,
-                        tracking_url: orderData.trackingURL || `https://karachizaiqa.com/track-order-widget.html?order=${orderData.orderNumber}`,
+                        tracking_url: orderData.trackingURL || `${window.location.origin}/track-order-widget.html?order=${orderData.orderNumber}`,
                         email: orderData.customerEmail
                     });
                     console.log('Customer email sent successfully to:', orderData.customerEmail, customerResult);
@@ -1685,7 +1685,7 @@
             document.getElementById('successTotal').textContent = orderData.total ? `A$${parseFloat(orderData.total).toFixed(2)}` : '—';
 
             // Set tracking URL
-            const trackingURL = orderData.trackingURL || `https://karachizaiqa.com/track-order-widget.html?order=${orderData.orderNumber}`;
+            const trackingURL = orderData.trackingURL || `${window.location.origin}/track-order-widget.html?order=${orderData.orderNumber}`;
             document.getElementById('trackingUrlInput').value = trackingURL;
             document.getElementById('trackNowBtn')._trackingURL = trackingURL;
         }
