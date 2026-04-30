@@ -624,7 +624,109 @@
             font-weight: 700;
             color: var(--mustard);
         }
-        
+
+        .order-meta-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin: 0.5rem 0 1.5rem;
+        }
+
+        .order-meta-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .order-meta-item strong {
+            color: var(--text-primary);
+            display: block;
+            font-size: 1rem;
+        }
+
+        .tracking-section {
+            background: linear-gradient(135deg, rgba(139,26,26,0.15) 0%, rgba(212,165,116,0.08) 100%);
+            border: 1px solid rgba(139,26,26,0.4);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .tracking-section h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.3rem;
+            color: var(--mustard);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .tracking-url-box {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .tracking-url-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--mustard);
+            font-size: 0.82rem;
+            font-family: monospace;
+            outline: none;
+            min-width: 0;
+        }
+
+        .copy-btn {
+            background: var(--burgundy);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover { background: var(--burgundy-light); }
+
+        .copy-btn.copied {
+            background: var(--forest-green);
+        }
+
+        .tracking-btns {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .track-now-btn {
+            flex: 1;
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .track-now-btn:hover { opacity: 0.85; }
+
         /* Responsive */
         @media (max-width: 600px) {
             .logo {
@@ -1257,8 +1359,35 @@
             <div class="order-number-display">
                 Order #<span id="orderNumber"></span>
             </div>
-            <p style="margin-top: 1.5rem; color: var(--text-secondary);">
-                We'll send you a confirmation shortly.<br>
+
+            <div class="order-meta-row">
+                <div class="order-meta-item">
+                    <strong id="successPickupDate">—</strong>
+                    Pickup Date
+                </div>
+                <div class="order-meta-item">
+                    <strong id="successPickupTime">—</strong>
+                    Pickup Time
+                </div>
+                <div class="order-meta-item">
+                    <strong id="successTotal">—</strong>
+                    Total
+                </div>
+            </div>
+
+            <div class="tracking-section">
+                <h3>📍 Track Your Order</h3>
+                <div class="tracking-url-box">
+                    <input type="text" class="tracking-url-input" id="trackingUrlInput" readonly>
+                    <button class="copy-btn" id="copyBtn" onclick="copyTrackingURL()">📋 Copy Link</button>
+                </div>
+                <div class="tracking-btns">
+                    <button class="track-now-btn" id="trackNowBtn" onclick="openTracking()">🔍 Track Now</button>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                Share this link to let anyone check your order status.<br>
                 See you at pickup!
             </p>
             <button class="submit-btn" onclick="location.reload()" style="max-width: 250px; margin: 2rem auto 0;">
@@ -1455,13 +1584,16 @@
                 const result = await response.json();
                 
                 if (result.success) {
+                    // Generate tracking URL
+                    const trackingURL = `https://karachizaiqa.com/track-order-widget.html?order=${result.data.orderNumber}`;
+                    result.data.trackingURL = trackingURL;
+
                     // Send email notifications via EmailJS
                     await sendEmailNotifications(result.data);
-                    
-                    // Show success message
+
+                    // Show success screen
                     document.getElementById('loadingState').style.display = 'none';
-                    document.getElementById('successMessage').style.display = 'block';
-                    document.getElementById('orderNumber').textContent = result.data.orderNumber;
+                    showSuccessScreen(result.data);
                 } else {
                     throw new Error(result.message || 'Failed to process order');
                 }
@@ -1529,6 +1661,7 @@
                         total: `A$${orderData.total.toFixed(2)}`,
                         pickup_date: orderData.pickupDate,
                         pickup_time: orderData.pickupTime,
+                        tracking_url: orderData.trackingURL || `https://karachizaiqa.com/track-order-widget.html?order=${orderData.orderNumber}`,
                         email: orderData.customerEmail
                     });
                     console.log('Customer email sent successfully to:', orderData.customerEmail, customerResult);
@@ -1539,6 +1672,65 @@
             } else {
                 console.log('No customer email provided, skipping customer notification');
             }
+        }
+
+        // Show success screen with order details and tracking URL
+        function showSuccessScreen(orderData) {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('orderNumber').textContent = orderData.orderNumber;
+
+            // Populate meta row
+            document.getElementById('successPickupDate').textContent = orderData.pickupDate || '—';
+            document.getElementById('successPickupTime').textContent = orderData.pickupTime || '—';
+            document.getElementById('successTotal').textContent = orderData.total ? `A$${parseFloat(orderData.total).toFixed(2)}` : '—';
+
+            // Set tracking URL
+            const trackingURL = orderData.trackingURL || `https://karachizaiqa.com/track-order-widget.html?order=${orderData.orderNumber}`;
+            document.getElementById('trackingUrlInput').value = trackingURL;
+            document.getElementById('trackNowBtn')._trackingURL = trackingURL;
+        }
+
+        // Copy tracking URL to clipboard
+        function copyTrackingURL() {
+            const input = document.getElementById('trackingUrlInput');
+            const btn = document.getElementById('copyBtn');
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    showCopied(btn);
+                }).catch(() => {
+                    fallbackCopy(input, btn);
+                });
+            } else {
+                fallbackCopy(input, btn);
+            }
+        }
+
+        function fallbackCopy(input, btn) {
+            input.select();
+            input.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy');
+                showCopied(btn);
+            } catch (e) {
+                console.error('Copy failed', e);
+            }
+        }
+
+        function showCopied(btn) {
+            btn.textContent = '✓ Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = '📋 Copy Link';
+                btn.classList.remove('copied');
+            }, 2500);
+        }
+
+        // Open tracking page
+        function openTracking() {
+            const url = document.getElementById('trackNowBtn')._trackingURL
+                || document.getElementById('trackingUrlInput').value;
+            if (url) window.open(url, '_blank');
         }
 
         // Load menu data from API (FIX 2 & 4)

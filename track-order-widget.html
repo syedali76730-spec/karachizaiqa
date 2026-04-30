@@ -641,9 +641,9 @@
                     <p style="margin-top: 1rem; font-size: 0.9rem;">Please check your order number, phone, or email and try again.</p>
                 </div>
             `;
-            
+
             resultsContainer.classList.add('active');
-            
+
             // Add back button
             const backBtn = document.createElement('button');
             backBtn.className = 'search-btn';
@@ -655,6 +655,20 @@
             };
             resultsContainer.appendChild(backBtn);
         }
+
+        // Auto-open and search if URL has ?order= parameter
+        (function initFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const orderParam = params.get('order');
+            if (!orderParam) return;
+
+            const input = document.getElementById('searchInput');
+            if (input) input.value = orderParam.trim();
+
+            openTrackModal();
+            // Small delay to let modal animation settle before fetching
+            setTimeout(trackOrder, 150);
+        })();
     </script>
 </body>
 </html>
