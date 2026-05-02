@@ -1480,37 +1480,40 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
         }
         .analytics-chart-card h3 { margin: 0 0 16px; font-size: 15px; }
         .analytics-chart-card canvas { max-height: 240px; }
-        .analytics-iframe-section {
-            background: rgba(255,255,255,0.03);
+.analytics-links-section {
+            background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
-            overflow: hidden;
+            padding: 20px;
             margin-bottom: 20px;
         }
-        .analytics-report-tabs {
+        .analytics-link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .analytics-link-card {
             display: flex;
-            background: rgba(255,255,255,0.05);
-            padding: 10px 12px;
-            gap: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            overflow-x: auto;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 18px 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, border-color 0.2s, background 0.2s;
+            text-align: center;
         }
-        .analytics-report-tab {
-            padding: 8px 16px;
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 13px;
-            color: rgba(255,255,255,0.7);
-            white-space: nowrap;
-            transition: all 0.2s;
+        .analytics-link-card:hover {
+            transform: translateY(-3px);
+            border-color: #4285F4;
+            background: rgba(66,133,244,0.1);
         }
-        .analytics-report-tab:hover { background: rgba(66,133,244,0.15); color: #4285F4; }
-        .analytics-report-tab.active { background: #4285F4; color: white; }
-        .analytics-iframe-wrap { height: 680px; }
-        .analytics-iframe-wrap iframe { width: 100%; height: 100%; border: none; }
+        .analytics-link-icon { font-size: 28px; }
+        .analytics-link-title { font-weight: 600; font-size: 14px; }
+        .analytics-link-desc { font-size: 11px; opacity: 0.6; line-height: 1.4; }
         .analytics-help {
             background: rgba(66,133,244,0.08);
             border-left: 4px solid #4285F4;
@@ -1533,26 +1536,12 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
         let analyticsChartsInitialized = false;
 
         function openFullAnalytics() {
-            window.open('https://analytics.google.com/', '_blank', 'width=1400,height=900');
+            window.open('https://analytics.google.com/', '_blank');
         }
 
         function refreshAnalyticsTab() {
-            const iframe = document.getElementById('analyticsFrame');
-            if (iframe) iframe.src = iframe.src;
             loadAnalyticsStats();
-            showNotification('Analytics refreshed', 'success');
-        }
-
-        function switchAnalyticsReport(reportType, btn) {
-            document.querySelectorAll('.analytics-report-tab').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const urls = {
-                realtime: 'https://analytics.google.com/analytics/web/#/p000000000/realtime/overview',
-                overview: 'https://analytics.google.com/analytics/web/#/p000000000/reports/reportinghub',
-                audience: 'https://analytics.google.com/analytics/web/#/p000000000/reports/explorer?params=_u..nav%3Dmaui',
-                behavior: 'https://analytics.google.com/analytics/web/#/p000000000/reports/explorer'
-            };
-            document.getElementById('analyticsFrame').src = urls[reportType] || 'https://analytics.google.com/';
+            showNotification('Stats refreshed', 'success');
         }
 
         async function loadAnalyticsStats() {
@@ -1643,7 +1632,7 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                     <p>Real-time insights into website performance — Measurement ID: G-JVNJLFT7J0</p>
                     <div class="analytics-actions">
                         <button onclick="openFullAnalytics()" class="btn btn-primary">🔗 Open Full Analytics</button>
-                        <button onclick="refreshAnalyticsTab()" class="btn btn-secondary">🔄 Refresh</button>
+                        <button onclick="refreshAnalyticsTab()" class="btn btn-secondary">🔄 Refresh Stats</button>
                     </div>
                 </div>
 
@@ -1681,25 +1670,39 @@ $adminName = $_SESSION['admin_name'] ?? 'Admin';
                     </div>
                 </div>
 
-                <div class="analytics-iframe-section">
-                    <div class="analytics-report-tabs">
-                        <button class="analytics-report-tab active" onclick="switchAnalyticsReport('realtime', this)">🔴 Real-Time</button>
-                        <button class="analytics-report-tab" onclick="switchAnalyticsReport('overview', this)">📊 Overview</button>
-                        <button class="analytics-report-tab" onclick="switchAnalyticsReport('audience', this)">👥 Audience</button>
-                        <button class="analytics-report-tab" onclick="switchAnalyticsReport('behavior', this)">🎯 Behavior</button>
+                <div class="analytics-links-section">
+                    <h3 style="margin:0 0 16px;font-size:15px;">🔗 Quick Access — Open in Google Analytics</h3>
+                    <div class="analytics-link-grid">
+                        <a href="https://analytics.google.com/analytics/web/#/p000000000/realtime/overview" target="_blank" class="analytics-link-card">
+                            <span class="analytics-link-icon">🔴</span>
+                            <span class="analytics-link-title">Real-Time</span>
+                            <span class="analytics-link-desc">See who's on your site right now</span>
+                        </a>
+                        <a href="https://analytics.google.com/analytics/web/#/p000000000/reports/reportinghub" target="_blank" class="analytics-link-card">
+                            <span class="analytics-link-icon">📊</span>
+                            <span class="analytics-link-title">Overview</span>
+                            <span class="analytics-link-desc">Summary of all key metrics</span>
+                        </a>
+                        <a href="https://analytics.google.com/analytics/web/#/p000000000/reports/explorer" target="_blank" class="analytics-link-card">
+                            <span class="analytics-link-icon">👥</span>
+                            <span class="analytics-link-title">Audience</span>
+                            <span class="analytics-link-desc">Demographics and user behaviour</span>
+                        </a>
+                        <a href="https://analytics.google.com/analytics/web/#/p000000000/reports/explorer" target="_blank" class="analytics-link-card">
+                            <span class="analytics-link-icon">🎯</span>
+                            <span class="analytics-link-title">Conversions</span>
+                            <span class="analytics-link-desc">Orders and purchase events</span>
+                        </a>
                     </div>
-                    <div class="analytics-iframe-wrap">
-                        <iframe id="analyticsFrame" src="https://analytics.google.com/" allowfullscreen></iframe>
-                    </div>
+                    <p style="margin:14px 0 0;font-size:12px;opacity:0.55;text-align:center;">Google Analytics blocks embedding — links open in a new tab</p>
                 </div>
 
                 <div class="analytics-help">
                     <h4>📖 How to Use</h4>
                     <ol>
-                        <li><strong>First Time:</strong> Click "Open Full Analytics" and sign in with your Google account</li>
-                        <li><strong>Quick Stats:</strong> Orders and revenue pull from your live database — visitors show once GA4 API is connected</li>
-                        <li><strong>Report Tabs:</strong> Switch between Real-Time, Overview, Audience, and Behavior views</li>
-                        <li><strong>Charts:</strong> Visitor trend and conversion charts will update once real data flows in from GA4</li>
+                        <li><strong>Quick Stats:</strong> Orders and revenue pull live from your database. Visitor count requires GA4 Data API setup.</li>
+                        <li><strong>Charts:</strong> Placeholder data shown — will reflect real GA4 data once the API is connected.</li>
+                        <li><strong>Quick Access:</strong> Click any card above to open that report directly in Google Analytics (sign in with your Google account the first time).</li>
                     </ol>
                 </div>
             `;
