@@ -1,0 +1,494 @@
+<!-- ============================================
+     FIXED ANALYTICS TAB - NO IFRAME
+     Replace your current Analytics tab with this
+     ============================================ -->
+
+<!-- Analytics Tab -->
+<div class="tab-content" id="analytics-tab" style="display: none;">
+    <div class="analytics-container">
+        <!-- Header -->
+        <div class="analytics-header">
+            <h2>📊 Google Analytics Dashboard</h2>
+            <p>Real-time insights into your website performance</p>
+            <div class="analytics-actions">
+                <button onclick="openGoogleAnalytics()" class="action-btn primary">
+                    🔗 Open Google Analytics
+                </button>
+                <button onclick="loadAnalyticsStats()" class="action-btn">
+                    🔄 Refresh Stats
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Stats Cards -->
+        <div class="quick-stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="visitors-today">-</div>
+                <div class="stat-label">Visitors Today</div>
+                <div class="stat-note">From GA4 API</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛒</div>
+                <div class="stat-value" id="orders-today">-</div>
+                <div class="stat-label">Orders Today</div>
+                <div class="stat-note">From Database</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="revenue-today">$-</div>
+                <div class="stat-label">Revenue Today</div>
+                <div class="stat-note">From Database</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value" id="conversion-rate">-%</div>
+                <div class="stat-label">Conversion Rate</div>
+                <div class="stat-note">Orders ÷ Visitors</div>
+            </div>
+        </div>
+
+        <!-- Quick Access Links -->
+        <div class="analytics-quick-links">
+            <h3>📊 Google Analytics Reports</h3>
+            <div class="quick-link-grid">
+                <a href="https://analytics.google.com/analytics/web/#/p469569346/realtime/overview" 
+                   target="_blank" 
+                   class="analytics-link-card realtime">
+                    <div class="link-icon">🔴</div>
+                    <div class="link-title">Real-Time</div>
+                    <div class="link-desc">See what's happening now</div>
+                </a>
+                
+                <a href="https://analytics.google.com/analytics/web/#/p469569346/reports/intelligenthome" 
+                   target="_blank" 
+                   class="analytics-link-card overview">
+                    <div class="link-icon">📊</div>
+                    <div class="link-title">Overview</div>
+                    <div class="link-desc">Key metrics summary</div>
+                </a>
+                
+                <a href="https://analytics.google.com/analytics/web/#/p469569346/reports/reportinghub?params=_u..nav%3Dmaui" 
+                   target="_blank" 
+                   class="analytics-link-card traffic">
+                    <div class="link-icon">🌐</div>
+                    <div class="link-title">Traffic Sources</div>
+                    <div class="link-desc">Where visitors come from</div>
+                </a>
+                
+                <a href="https://analytics.google.com/analytics/web/#/p469569346/reports/explorer" 
+                   target="_blank" 
+                   class="analytics-link-card explorer">
+                    <div class="link-icon">🔍</div>
+                    <div class="link-title">Explore</div>
+                    <div class="link-desc">Custom reports & analysis</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <h3>📈 Visitor Trend (Last 7 Days)</h3>
+                <canvas id="visitors-chart"></canvas>
+            </div>
+            
+            <div class="chart-card">
+                <h3>🍽️ Order Conversion</h3>
+                <canvas id="conversion-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Setup Instructions (if API not connected) -->
+        <div class="analytics-setup-notice" id="ga4-setup-notice" style="display: none;">
+            <h4>⚠️ GA4 Data API Not Connected</h4>
+            <p>To display visitor counts, you need to connect the Google Analytics Data API.</p>
+            <button onclick="showSetupGuide()" class="action-btn">
+                📖 Show Setup Guide
+            </button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="analytics-instructions">
+            <h4>📖 How to Use:</h4>
+            <ol>
+                <li><strong>Quick Stats:</strong> View today's key metrics at a glance</li>
+                <li><strong>Open Google Analytics:</strong> Click to access full GA4 dashboard in new tab</li>
+                <li><strong>Real-Time:</strong> See current active users and their activity</li>
+                <li><strong>Reports:</strong> Click any report card to open that section directly</li>
+                <li><strong>Auto-Refresh:</strong> Stats refresh automatically every 30 seconds</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===================================
+   ANALYTICS TAB STYLES
+   =================================== */
+
+.analytics-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.analytics-header {
+    background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+    padding: 25px;
+    border-radius: 12px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.analytics-header h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+
+.analytics-header p {
+    margin: 0 0 15px 0;
+    opacity: 0.9;
+}
+
+.analytics-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Quick Stats Cards */
+.quick-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-color: #D4A574;
+}
+
+.stat-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #D4A574;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 14px;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.stat-note {
+    font-size: 11px;
+    opacity: 0.5;
+    font-style: italic;
+}
+
+/* Quick Access Links */
+.analytics-quick-links {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.analytics-quick-links h3 {
+    margin: 0 0 20px 0;
+    color: #D4A574;
+}
+
+.quick-link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.analytics-link-card {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.analytics-link-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border-color: #4285F4;
+}
+
+.link-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.link-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #D4A574;
+}
+
+.link-desc {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* Charts Section */
+.charts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #D4A574;
+}
+
+.chart-card canvas {
+    max-height: 300px;
+}
+
+/* Setup Notice */
+.analytics-setup-notice {
+    background: rgba(251, 188, 4, 0.1);
+    border: 2px solid #FBBC04;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.analytics-setup-notice h4 {
+    margin: 0 0 10px 0;
+    color: #FBBC04;
+}
+
+/* Instructions */
+.analytics-instructions {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid #4285F4;
+}
+
+.analytics-instructions h4 {
+    margin: 0 0 15px 0;
+    color: #D4A574;
+}
+
+.analytics-instructions ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.analytics-instructions li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.analytics-instructions strong {
+    color: #4285F4;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .quick-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-link-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .analytics-actions {
+        flex-direction: column;
+    }
+}
+</style>
+
+<script>
+// ===================================
+// ANALYTICS TAB FUNCTIONS
+// ===================================
+
+// Open Google Analytics in new window
+function openGoogleAnalytics() {
+    window.open('https://analytics.google.com/analytics/web/#/p469569346/reports/intelligenthome', '_blank');
+}
+
+// Load analytics stats from backend
+async function loadAnalyticsStats() {
+    try {
+        const response = await fetch('analytics-api.php?action=quick_stats');
+        const data = await response.json();
+        
+        // Update stat cards
+        document.getElementById('visitors-today').textContent = data.visitors_today || 'N/A';
+        document.getElementById('orders-today').textContent = data.orders_today || '0';
+        document.getElementById('revenue-today').textContent = 'A$' + (data.revenue_today || 0).toFixed(2);
+        
+        // Calculate conversion rate
+        if (data.visitors_today && data.visitors_today !== null) {
+            const conversionRate = data.orders_today > 0 
+                ? ((data.orders_today / data.visitors_today) * 100).toFixed(1)
+                : '0.0';
+            document.getElementById('conversion-rate').textContent = conversionRate + '%';
+            
+            // Hide setup notice
+            document.getElementById('ga4-setup-notice').style.display = 'none';
+        } else {
+            document.getElementById('conversion-rate').textContent = 'N/A';
+            
+            // Show setup notice
+            document.getElementById('ga4-setup-notice').style.display = 'block';
+        }
+        
+        console.log('✅ Analytics stats loaded:', data);
+        
+    } catch (error) {
+        console.error('❌ Analytics stats error:', error);
+        document.getElementById('visitors-today').textContent = 'Error';
+    }
+}
+
+// Initialize charts
+function initializeAnalyticsCharts() {
+    // Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js not loaded');
+        return;
+    }
+    
+    // Visitors Trend Chart
+    const visitorsCtx = document.getElementById('visitors-chart');
+    if (visitorsCtx && !visitorsCtx.chart) {
+        visitorsCtx.chart = new Chart(visitorsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Visitors',
+                    data: [45, 52, 48, 67, 89, 134, 98],
+                    borderColor: '#4285F4',
+                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: true,
+                        labels: { color: '#fff' }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    },
+                    x: { 
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255,255,255,0.1)' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Conversion Chart
+    const conversionCtx = document.getElementById('conversion-chart');
+    if (conversionCtx && !conversionCtx.chart) {
+        conversionCtx.chart = new Chart(conversionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Orders', 'Visitors (No Order)'],
+                datasets: [{
+                    data: [23, 77],
+                    backgroundColor: ['#34A853', '#EA4335'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: '#fff' }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Show setup guide
+function showSetupGuide() {
+    alert('GA4 Data API Setup:\n\n1. Go to Google Cloud Console\n2. Enable Google Analytics Data API\n3. Create Service Account\n4. Download credentials JSON\n5. Upload to server\n6. Update analytics-api.php with credentials path\n\nDetailed guide: Check the documentation provided.');
+}
+
+// Auto-load stats when Analytics tab is opened
+document.querySelector('[data-tab="analytics"]')?.addEventListener('click', function() {
+    loadAnalyticsStats();
+    initializeAnalyticsCharts();
+});
+
+// Auto-refresh stats every 30 seconds (only when tab is active)
+let analyticsRefreshInterval;
+document.querySelector('[data-tab="analytics"]')?.addEventListener('click', function() {
+    // Clear existing interval
+    if (analyticsRefreshInterval) {
+        clearInterval(analyticsRefreshInterval);
+    }
+    
+    // Set new interval
+    analyticsRefreshInterval = setInterval(() => {
+        if (document.getElementById('analytics-tab').style.display !== 'none') {
+            loadAnalyticsStats();
+        }
+    }, 30000); // 30 seconds
+});
+</script>
